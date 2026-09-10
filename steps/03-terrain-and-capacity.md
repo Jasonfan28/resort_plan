@@ -12,49 +12,103 @@ plan's stated existing CCC be reproduced from its own stated inputs?
 
 ## Alternatives considered
 
-To be filled by `/step 03`.
+- Treat C008 ("resorts do not publish their CCC methodology") as a reason
+  not to attempt reproduction at all. Rejected once S011 turned out to be
+  reachable: RMR's own appendix does publish enough (per-lift slope
+  length, vertical rise, hourly capacity, operating hours, access-role
+  and misload percentages, and the resulting adjusted hourly capacity and
+  CCC) to test reproduction directly, regardless of what C008's general
+  claim about the industry says.
 
 ## Evidence
 
-- [C007] CCC compares the lift system's vertical transport capacity with
-  guests' daily demand for vertical. Source S022 (trade publication, not
-  peer reviewed).
-- [C008] Resorts do not publish the details of their CCC calculations.
-  Source S023.
-
-Both claims are status=needs-review, recorded from search snippets.
+- [C007] agent-checked. S022 confirms CCC compares lift vertical
+  transport capacity against guest demand for vertical.
+- [C008] Could not check (WebFetch could not render the article body
+  twice; may be paywalled). Neither confirmed nor contradicted, and
+  turned out not to block this step regardless, since S011 publishes its
+  own per-lift inputs.
+- [C024] The appendix's stated formula: CCC = Vertical Rise x Hourly
+  Capacity x Operating Hours x Loading Efficiency / Weighted Vertical
+  Demand, with ability-class vertical demand from 1,000 m (Beginner) to
+  10,000 m (Expert).
+- [C025] The appendix's stated phase totals: 4,545 / 9,529 / 11,572 /
+  18,167 skiers (Existing / Phase 2 / Phase 3 / Buildout).
+- [C032] The master plan's own terrain breakdown: 1,263 ha, 7% beginner,
+  45.5% intermediate, 47.5% advanced, 69 runs, 2 bowls.
+- [C033] The master plan's own elevation table: 512 m (bottom) to 2,466 m
+  (Mt. Mackenzie summit), 1,713 m lift-accessed vertical.
 
 ## Inputs
 
-To be filled by `/step 03`.
+- S011 per-lift tables (Tables 1-1 to 1-4), transcribed into
+  notebooks/03_terrain_and_capacity.ipynb via pdfplumber (evidence: C025).
+- data/processed/02_ccc_by_phase.csv (the four stated phase totals,
+  written by notebook 02 from the same claim, read here rather than
+  retyped).
 
 ## Method
 
-To be filled by `/step 03`.
+- (evidence) Reproduce each lift's CCC using C024's formula, with
+  Loading Efficiency operationalized as (1 - Up-Mtn Access Role% -
+  Misload Lift Stop%) applied to Hourly Capacity, since that combination
+  exactly reproduces the appendix's own "Adjusted Hourly Capacity"
+  column. Neither the (1 - access - misload) formula nor its role as
+  "Loading Efficiency" is a sentence written in the appendix; this was
+  found by testing arithmetic against the table's own columns, so it is
+  this notebook's reverse-engineering, not a quoted method. It is
+  checked against every one of the appendix's own 63 (phase, lift) rows
+  and all 4 phase totals, not just a couple of examples.
+- (judgment call) Do not attempt the slope-by-ability-class LiDAR
+  analysis this step's Question also asks for. See Open issues: no DEM
+  covering Mount Mackenzie/RMR is confirmed accessible yet, and getting
+  one needs either a human with an OpenTopography API key or a human
+  browsing LidarBC/HRDEM's JavaScript map tools directly.
 
 ## Outputs
 
-To be filled by `/step 03`.
+- data/processed/03_lift_ccc_reproduction.csv (per-lift stated vs.
+  computed CCC, all 63 phase/lift rows)
+- data/processed/03_ccc_phase_reproduction_summary.csv (4 phase totals,
+  stated vs. computed)
 
 ## Checks
 
-To be filled by `/step 03`.
+- Every per-lift CCC and every phase total must reproduce within a small
+  rounding tolerance (2 skiers).
+- Last run: largest per-lift diff was 0.5 skiers, largest phase-total
+  diff was 1 skier (Phase 2 and Phase 3 each came out 1 skier under the
+  stated total; Phase 1 and Buildout matched exactly). All within
+  tolerance: the master plan's stated CCC does reproduce from its own
+  stated per-lift inputs.
 
 ## Open issues
 
-- No LiDAR DEM for the resort area is in research/ or data/raw/ yet. This
-  is the largest missing input for this step.
-- C008 (resorts do not publish their CCC methodology) is itself a
-  potential blocker: if RMR's master plan appendix (C002, step 02) does
-  not fully disclose its CCC method, "reproduce the stated CCC" may not
-  be fully achievable, and that limitation needs to be stated plainly
-  rather than papered over with an assumption.
-- Neither C007 nor C008 has been checked against the full article yet.
+- No independent LiDAR-derived slope analysis exists. C032 gives the
+  resort's own stated ability-class terrain breakdown instead, which
+  answers part of the step's Question but is self-reported by RMR, not
+  independently computed. OpenTopography's API now requires a key (like
+  OpenAlex) and returned HTTP 401 to an unauthenticated request; BC's
+  LidarBC and NRCan's HRDEM (C017-C019, step 01) are both JavaScript map
+  tools WebFetch cannot query by location. Someone needs to either get an
+  OpenTopography API key, or open LidarBC/HRDEM in a browser and
+  confirm/download a tile over Mount Mackenzie, to get an independent
+  slope analysis rather than relying only on RMR's self-reported figures.
+- The runs-and-lifts inventory (a plain list of named lifts/runs, as
+  distinct from the CCC table) has not been separately compiled; the
+  per-lift table here is organized by CCC calculation, not by trail
+  network.
+- C008 remains unchecked; if it can never be opened, note that
+  explicitly rather than treating "could not check" as "confirmed."
 
 ## Status
 
-draft
+built
 
 ## Changelog
 
 - 2026-09-10: created.
+- 2026-09-10: transcribed S011's per-lift tables via pdfplumber, built
+  notebooks/03_terrain_and_capacity.ipynb, reproduced all 4 phase CCC
+  totals within rounding tolerance. LiDAR/slope analysis left open
+  pending DEM access.
