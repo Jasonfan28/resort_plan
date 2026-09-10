@@ -1,0 +1,4 @@
+band,bottom_m,top_m,band_vertical_m
+Base to lift top,512,2225,1713
+Lift top to sub peak,2225,2340,115
+Sub peak to summit,2340,2466,126
