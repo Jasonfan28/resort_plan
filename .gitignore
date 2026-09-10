@@ -1,0 +1,13 @@
+# raw downloads and executed notebook runs are not committed
+data/raw/*
+!data/raw/.gitkeep
+runs/*
+!runs/.gitkeep
+
+# python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# environments (created in CC-2)
+.venv/
