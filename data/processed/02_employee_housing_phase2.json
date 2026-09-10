@@ -1,0 +1,8 @@
+{
+  "min_buildings": 3,
+  "beds_per_building_min": 150,
+  "beds_per_building_max": 200,
+  "lower_village_hectares": 9.19,
+  "total_beds_min": 450,
+  "total_beds_max": 600
+}
