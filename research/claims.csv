@@ -1,0 +1,17 @@
+claim_id,step,claim,source_id,locator,status,conflicts_with,notes
+C001,02,The Province posts approved resort master plans on a public list page.,S010,List page,needs-review,,Seen in a search snippet only. Open the source and confirm.
+C002,02,The RMR master plan includes an appendix of comfortable carrying capacity tables.,S011,Appendix A,needs-review,,Seen in a search snippet only. Open the source and confirm.
+C003,06,The City of Revelstoke has a 2025 interim Housing Needs and Demands Assessment.,S012,Housing needs section,needs-review,,Seen in a search snippet only. Open the source and confirm.
+C004,06,The provincial HNR Method assigns Revelstoke a demand factor of 1.6.,S025,Demand factor discussion,needs-review,,Seen in a search snippet only. Open the source and confirm. Secondary source. Replace with provincial table.
+C005,04,CCCS publishes daily snowfall water equivalent projections derived from PCIC's CanDCS-M6 dataset.,S015,Dataset description,needs-review,,Seen in a search snippet only. Open the source and confirm.
+C006,04,CanDCS-M6 daily data are on a 10 km grid.,S016,Dataset notes,needs-review,,Seen in a search snippet only. Open the source and confirm.
+C007,03,CCC compares the lift system's vertical transport capacity with guests' daily demand for vertical.,S022,Article body,needs-review,,Seen in a search snippet only. Open the source and confirm.
+C008,03,Resorts do not publish the details of their CCC calculations.,S023,Article body,needs-review,,Seen in a search snippet only. Open the source and confirm.
+C009,05,"RMR employs around 500 people, including hotel and food and beverage workers.",S019,Article body,needs-review,C010,Seen in a search snippet only. Open the source and confirm. Article date unknown.
+C010,05,RMR employs over 200 staff during the winter season.,S024,Employer listing,needs-review,C009,Seen in a search snippet only. Open the source and confirm. Recruitment page. May count only positions it places.
+C011,05,"With its new building, RMR can house over 400 people on site.",S020,Quote from RMR operations VP,needs-review,,Seen in a search snippet only. Open the source and confirm.
+C012,05,RMR's staff housing plan is three buildings with 160 beds each.,S021,Project description,needs-review,,Seen in a search snippet only. Open the source and confirm. 2022 plan. Check whether phasing changed.
+C013,06,Revelstoke is exempt from the provincial principal residence requirement for short-term rentals but can opt in.,S026,Article body,needs-review,,Seen in a search snippet only. Open the source and confirm. Cross-check against S017.
+C014,06,The provincial short-term rental data portal is for local governments.,S018,Page description,needs-review,,Seen in a search snippet only. Open the source and confirm.
+C015,07,Revelstoke Council approved the Oscar Lands Master Plan in February 2024.,S012,Oscar Lands section,needs-review,,Seen in a search snippet only. Open the source and confirm.
+C016,05,"Big White employs close to 1,000 people each winter.",S019,Article body,needs-review,,Seen in a search snippet only. Open the source and confirm. Article date unknown.
