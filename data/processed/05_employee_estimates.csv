@@ -1,0 +1,5 @@
+phase,ccc_skiers,employees_low,employees_mid,employees_high,needing_housing_low_min_beds,needing_housing_low_max_beds,needing_housing_mid_min_beds,needing_housing_mid_max_beds,needing_housing_high_min_beds,needing_housing_high_max_beds
+Phase 1 (Existing),4545,371,530,689,0,0,0,80,89,239
+Phase 2,9529,778,1112,1445,178,328,512,662,845,995
+Phase 3,11572,945,1350,1755,345,495,750,900,1155,1305
+Buildout,18167,1484,2119,2755,884,1034,1519,1669,2155,2305
