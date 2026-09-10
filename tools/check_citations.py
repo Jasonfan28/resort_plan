@@ -28,8 +28,21 @@ def read_csv(path):
         return list(csv.DictReader(f))
 
 
+def check_duplicate_ids(rows, key, label):
+    errors = []
+    seen = set()
+    for row in rows:
+        value = row[key]
+        if value in seen:
+            errors.append(f"duplicate {label} {value!r}: two rows share this ID")
+        seen.add(value)
+    return errors
+
+
 def check_ledger(claims, sources):
     errors = []
+    errors += check_duplicate_ids(sources, "id", "source id")
+    errors += check_duplicate_ids(claims, "claim_id", "claim id")
     source_ids = {s["id"] for s in sources}
     claim_ids = {c["claim_id"] for c in claims}
     for c in claims:

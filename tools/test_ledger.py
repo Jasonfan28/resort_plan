@@ -126,6 +126,29 @@ class LedgerTest(unittest.TestCase):
         with self.assertRaises(LedgerError):
             read_ledger(self.claims_path, self.sources_path)
 
+    def test_duplicate_source_id_raises(self):
+        # Two unrelated rows sharing an ID (e.g. two agents each picking
+        # the next free-looking number without seeing each other's write)
+        # would otherwise silently shadow one another in the sources dict.
+        with self.assertRaises(LedgerError):
+            self._ledger(
+                sources=[
+                    _source("S001", "Smith, J.", "2020", title="First source"),
+                    _source("S001", "Doe, A.", "2021", title="Second source"),
+                ],
+                claims=[_claim("C001", "S001", "needs-review")],
+            )
+
+    def test_duplicate_claim_id_raises(self):
+        with self.assertRaises(LedgerError):
+            self._ledger(
+                sources=[_source("S001", "Smith, J.", "2020")],
+                claims=[
+                    _claim("C001", "S001", "needs-review", claim="First claim"),
+                    _claim("C001", "S001", "needs-review", claim="Second claim"),
+                ],
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

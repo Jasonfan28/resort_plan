@@ -38,16 +38,31 @@ def _check_row_count(path, prefix, rows):
         )
 
 
+def _check_unique_ids(path, key, rows):
+    seen = set()
+    for row in rows:
+        value = row[key]
+        if value in seen:
+            raise LedgerError(
+                f"{path}: duplicate ID {value!r}. Two rows sharing an ID would "
+                "silently shadow one another when indexed by that ID."
+            )
+        seen.add(value)
+
+
 def read_ledger(claims_path=CLAIMS, sources_path=SOURCES):
     """Load and cross-check the two ledgers.
 
     Returns a dict with claims (by claim_id) and sources (by id). Raises
-    LedgerError if either file's row count disagrees with its ID-line count.
+    LedgerError if either file's row count disagrees with its ID-line count,
+    or if either file has two rows sharing the same ID.
     """
     claims = _read_csv(claims_path)
     sources = _read_csv(sources_path)
     _check_row_count(claims_path, "C", claims)
     _check_row_count(sources_path, "S", sources)
+    _check_unique_ids(claims_path, "claim_id", claims)
+    _check_unique_ids(sources_path, "id", sources)
 
     return {
         "claims": {c["claim_id"]: c for c in claims},
