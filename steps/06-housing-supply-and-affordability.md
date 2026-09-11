@@ -12,56 +12,85 @@ look like?
 
 ## Alternatives considered
 
-To be filled by `/step 06`.
+- Approximate resort wages from a generic BC tourism-sector wage
+  statistic to complete the rent-vs-wage comparison. Rejected: no such
+  source was found and read this session, and a generic provincial
+  figure would misrepresent itself as resort-specific.
 
 ## Evidence
 
-- [C003] The City of Revelstoke has a 2025 interim Housing Needs and
-  Demands Assessment. Source S012.
-- [C004] The provincial HNR Method assigns Revelstoke a demand factor of
-  1.6. Source S025, a secondary source (City of Salmon Arm's report), to
-  be replaced with the provincial HNR Method table directly.
-- [C013] Revelstoke is exempt from the provincial principal residence
-  requirement for short-term rentals but can opt in. Source S026.
-- [C014] The provincial short-term rental data portal is for local
-  governments. Source S018.
-
-All four claims are status=needs-review, recorded from search snippets.
+- [C003] agent-checked. City's 2025 Interim Report housing needs
+  assessment page. Source S012.
+- [C004] Could not check (S025 PDF returned HTTP 403, no local copy).
+  Secondary source; its 1.6 demand factor is close to but not confirmed
+  identical with C028's primary-sourced 1.63 for Revelstoke specifically.
+- [C013]/[C037] agent-checked. Revelstoke (municipality and resort area)
+  exempt from the STR principal residence requirement; confirmed via
+  both a news article and the provincial page itself.
+- [C014] agent-checked. The STR data portal page is for local
+  governments.
+- [C026]-[C029] agent-checked. 5-year/20-year housing need by
+  component; 2021 rental vacancy 1.4% vs. 3-5% healthy.
+- [C048] The HNR's owner affordability table (2024): only two of five
+  family types can afford any dwelling type at 30% of income, and none
+  can afford a single-detached home or townhouse.
 
 ## Inputs
 
-To be filled by `/step 06`.
+- data/processed/02_housing_need_by_component.csv (step 02, from
+  C026-C029)
 
 ## Method
 
-To be filled by `/step 06`.
+- (evidence) Report the HNR's own rental-vacancy and ownership-
+  affordability figures as given, without projecting them forward or
+  combining them into a single index.
+- (judgment call) Do not attempt a rent-versus-resort-wage comparison.
+  No source in research/ gives a resort-specific wage figure or a
+  dollar-value renter affordability table (the HNR's own affordability
+  table is for ownership, not rental); approximating one from unrelated
+  data would violate CLAUDE.md rule 6.
+- (judgment call) Do not attempt "dwellings not occupied by usual
+  residents" (a specific census metric the step's Question names). It
+  was not found in the HNR pages read this session; a dedicated Census/
+  StatCan check has not been done.
 
 ## Outputs
 
-To be filled by `/step 06`.
+- data/processed/06_ownership_affordability_gap.csv
+- data/processed/06_rental_vacancy.json
+- data/processed/06_str_context.json
 
 ## Checks
 
-To be filled by `/step 06`.
+- Healthy vacancy range internally consistent (low < high); the actual
+  2021 vacancy rate falls below that range; at least one family type
+  can afford at least one dwelling type (a sanity check that the table
+  was transcribed right, not uniformly zero).
+- Last run: all checks passed.
 
 ## Open issues
 
-- C004's demand factor comes from a secondary source (Salmon Arm's own
-  report citing the provincial method) rather than the provincial HNR
-  Method table itself. The claim's own notes already flag this: replace
-  it with the primary source before relying on it.
-- C013 should be cross-checked against S017 (the provincial principal
-  residence requirement page itself), which currently returns HTTP 503 to
-  a scripted request and needs a human to open it in a browser.
-- S014 and S018 (both provincial short-term rental / housing needs report
-  pages) also return HTTP 503 to scripted requests and are unread.
-- None of these four claims have been checked by the source-verifier
-  subagent yet.
+- The step's Question asks specifically for "dwellings not occupied by
+  usual residents" (a Census/NOUR-style metric) and a rent-vs-wage
+  comparison. Neither is answered here; both need either a dedicated
+  Census data pull or a resort-wage source that has not been found.
+- C004 (1.6) vs. C028 (1.63) remains an open, unresolved conflict per
+  CLAUDE.md rule 5. C004 itself could not be re-verified this session
+  (S025 now returns HTTP 403 and there is no local copy).
+- The Oscar Lands Master Plan (C015/C038) overlaps with this step's
+  housing-supply scope but is filed under step 07; see step 07's Open
+  issues for the same cross-reference.
 
 ## Status
 
-draft
+built
 
 ## Changelog
 
 - 2026-09-10: created.
+- 2026-09-10: source-verifier confirmed most claims (C004 still
+  unreachable); built
+  notebooks/06_housing_supply_and_affordability.ipynb and ran clean via
+  `/run 06`. Left "dwellings not occupied by usual residents" and rent-
+  vs-wage unanswered for lack of evidence.

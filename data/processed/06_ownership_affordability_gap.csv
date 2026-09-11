@@ -1,0 +1,6 @@
+family_type,median_income,single_detached_gap,townhouse_gap,condo_gap,can_afford_any_type
+Couples without children,116298,-2200,-1777,-307,False
+Couples with children,153889,-1260,-837,632,True
+Lone parent families,81056,-3081,-2658,-1188,False
+Non-census families,64845,-3487,-3063,-1594,False
+Other census families,186782,-438,-14,1455,True
