@@ -1,0 +1,8 @@
+osm_id,osm_name,aerialway_type,dem_bottom_elev_m,dem_top_elev_m,dem_vert_rise_m,proposed_map_ref,plan_vert_rise_m,vert_rise_delta_m,match_basis,confirmed_by_jason
+481720772,Revelation Gondola - Upper,gondola,793.9,1693.6,899.7,5,900.0,0.3,vertical rise (delta=0.3m),
+1361895818,Revelation Gondola - Lower,gondola,513.5,793.9,280.4,2,280.0,0.4,vertical rise (delta=0.4m),
+1221046154,id1221046154,magic_carpet,1689.8,1705.8,16.1,Lil' Bit,15.45,0.6,vertical rise (delta=0.6m),
+101303267,Little Bit,magic_carpet,782.8,792.7,9.9,24,9.0,0.9,"vertical rise (delta=0.9m); name similarity also suggests ""Lil' Bit"" (ratio=0.78), disagreeing with the vertical-rise match",
+101303264,The Stoke,chair_lift,1592.0,2223.6,631.7,12,633.0,1.3,vertical rise (delta=1.3m),
+876357454,Stellar,chair_lift,1650.1,1773.6,123.5,11,125.0,1.5,vertical rise (delta=1.5m),
+101303245,The Ripper,chair_lift,1433.5,1961.0,527.5,14,530.0,2.5,vertical rise (delta=2.5m),

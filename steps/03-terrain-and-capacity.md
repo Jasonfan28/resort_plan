@@ -6,13 +6,11 @@ What does slope-by-ability-class from LiDAR say about the mountain's
 terrain, what do the runs and lifts inventory show, and can the master
 plan's stated existing CCC be reproduced from its own stated inputs?
 
-**Proposed addition (not yet built, awaiting approval):** now that a real
-DEM and real lift/run geometry are both accessible (C051-C053, C063),
-what does DEM-derived slope and aspect say about terrain by ability
-class, how does DEM-derived lift vertical rise compare lift-by-lift
-against the master plan's own figures, and what do OSM's runs show for
-length, vertical drop, slope, and difficulty against a DEM-derived slope
-class?
+**Answered below** using a real DEM and real lift/run geometry
+(C051-C053, C063): DEM-derived slope and aspect by ability class,
+lift-by-lift vertical rise against the master plan's own figures, and
+OSM's runs by length, vertical drop, slope, and difficulty against a
+DEM-derived slope class.
 
 ## Decision
 
@@ -68,12 +66,12 @@ class?
 - data/processed/02_ccc_by_phase.csv (the four stated phase totals,
   written by notebook 02 from the same claim, read here rather than
   retyped).
-- **Proposed additions:**
-  - S048 (HRDEM 1m mosaic, STAC, EPSG:3979 native) -- windowed reads only,
-    clipped to the AOI's bounding box, never a full tile download.
-  - S050 (OSM aerialway + piste ways near RMR, via Overpass), saved as
-    data/raw/S050_overpass_lifts_pistes.json this session.
-  - The AOI polygon from S050 (landuse=winter_sports way 475720359, C063).
+- S048 (HRDEM 1m mosaic, STAC, EPSG:3979 native) -- windowed reads only,
+  clipped to the AOI's bounding box, never a full tile download.
+- S050 (OSM aerialway + piste ways near RMR, via Overpass), saved as
+  data/raw/S050_overpass_lifts_pistes.json this session.
+- The AOI polygon from S050 (landuse=winter_sports way 475720359, C063),
+  saved as data/raw/S050_overpass_aoi.json.
 
 ## Method
 
@@ -87,13 +85,7 @@ class?
   this notebook's reverse-engineering, not a quoted method. It is
   checked against every one of the appendix's own 63 (phase, lift) rows
   and all 4 phase totals, not just a couple of examples.
-- (judgment call, superseded by the proposed addition below if approved)
-  Do not attempt the slope-by-ability-class LiDAR analysis this step's
-  Question also asks for. The blocker that justified this (no accessible
-  DEM) no longer holds: S048 is confirmed live and read successfully
-  this session (C051).
-
-### Proposed spatial method (not yet built)
+### Spatial method
 
 - (evidence) **AOI**: use the OSM landuse=winter_sports polygon (C063),
   reprojected to EPSG:26911, since no dedicated ski-area or tenure
@@ -145,15 +137,13 @@ class?
   computed CCC, all 63 phase/lift rows)
 - data/processed/03_ccc_phase_reproduction_summary.csv (4 phase totals,
   stated vs. computed)
-- **Proposed additions:**
-  - data/processed/03_aoi.gpkg (AOI polygon, EPSG:26911)
-  - data/processed/03_lift_crosswalk.csv (OSM-to-plan lift mapping,
-    match_basis, confirmed_by_jason, DEM vs. plan vertical rise)
-  - data/processed/03_runs.gpkg or .csv (per-run length, vertical drop,
-    slope stats, OSM difficulty vs. DEM slope class)
-  - data/processed/03_terrain_slope_aspect_summary.csv (area by
-    ability-class slope band and aspect, compared against C032's
-    7/45.5/47.5% split)
+- data/processed/03_aoi.gpkg (AOI polygon, EPSG:26911)
+- data/processed/03_lift_crosswalk.csv (OSM-to-plan lift mapping,
+  match_basis, confirmed_by_jason, DEM vs. plan vertical rise)
+- data/processed/03_runs.gpkg (116 runs: length, vertical drop, mean/max
+  DEM slope, OSM difficulty tag)
+- data/processed/03_terrain_slope_aspect_summary.csv (AOI area by slope
+  class, for both threshold sets)
 
 ## Checks
 
@@ -164,46 +154,63 @@ class?
   stated total; Phase 1 and Buildout matched exactly). All within
   tolerance: the master plan's stated CCC does reproduce from its own
   stated per-lift inputs.
-- **Proposed additions:**
-  - AOI area within a stated tolerance of C032's 1,263 ha (already
-    ~1.2% off in the Phase 1 access test, C063; an independent-number
-    validation check, not just an internal consistency check).
-  - DEM-derived vertical rise within a stated tolerance of S011's
-    vert_rise for every lift the crosswalk proposes as a confirmed
-    match; report, do not hide, any match where they disagree
-    substantially.
-  - Terrain slope-class area split reported against C032's own split,
-    with the threshold-sensitivity result shown, not just one number.
-  - CRS check after every reprojection: report the CRS and confirm units
-    are metres.
+- AOI area within a stated tolerance (5%) of C032's 1,263 ha.
+  Last run: 1,248.3 ha, 1.2% off -- an independent-number validation
+  check, not just an internal consistency check.
+- DEM-derived vertical rise within 5 m for every lift the crosswalk
+  proposes as its closest match; report, do not hide, any disagreement
+  between the vertical-rise match and a separate name-similarity signal.
+  Last run: all 7 lifts matched within 5 m (largest delta 2.5 m); one
+  lift (OSM "Little Bit") shows a genuine disagreement, reported not
+  hidden -- vertical rise alone points to map_ref "24" (delta 0.9 m),
+  while name similarity (difflib, ratio 0.78) points to "Lil' Bit"
+  instead. Left for confirmed_by_jason, not resolved by the notebook.
+- Terrain slope-class area split reported against C032's own split, with
+  both threshold-sensitivity results shown, not just one number. Last
+  run: the two threshold sets disagree substantially (as expected, since
+  neither is sourced for groomed downhill terrain) -- C067's steeper SAC
+  scale puts 74.4% of AOI area under its gentlest class, while C069's
+  gentler folk banding puts only 22.9% under its gentlest class. This
+  gap is itself the finding: no defensible single number exists without
+  a real source for downhill-specific thresholds.
+- CRS check after every reprojection: confirmed EPSG:26911 and ~1x1 m
+  pixels after reprojecting the DEM from its native EPSG:3979.
+- Every run must have a real (non-NaN) slope/drop statistic. A first
+  version clipped the DEM to the AOI plus a fixed buffer and silently
+  produced NaN stats for 9 of 116 runs (mostly unnamed freeride ways
+  extending past the AOI polygon); fixed by clipping to the union of the
+  AOI, lift, and run bounds instead of the AOI alone, caught by
+  notebook-reviewer, not by an automated check -- worth adding an
+  explicit no-NaN assert if this step is revisited.
 
 ## Open issues
 
-- **Resolved (2026-09-10):** the DEM-access blocker is gone. S048
-  (NRCan HRDEM 1m, STAC, no key) reads live via rasterio; C051 already
-  proves it against two of the master plan's own elevation figures. The
-  spatial method above is proposed but not yet built, pending approval.
 - No dedicated ski-area or tenure boundary source was found; the AOI
   uses OSM's landuse=winter_sports polygon instead (C063), which is a
-  community-mapped boundary, not an official one.
-- Ability-class slope-degree thresholds are not expected to be stated in
-  the master plan (C032 gives area splits, not slope criteria); this
-  will likely end up a labelled, sensitivity-tested judgment call rather
-  than a sourced fact.
-- The runs-and-lifts inventory (a plain list of named lifts/runs, as
-  distinct from the CCC table) has not been separately compiled; the
-  per-lift table here is organized by CCC calculation, not by trail
-  network. The proposed spatial addition covers this from OSM instead.
+  community-mapped boundary, not an official one. It validates well
+  against C032 (1.2%), which is reassuring but not proof it is the
+  resort's actual legal tenure boundary.
+- No source states downhill-ski slope thresholds. The two threshold
+  sets tested (C067, C069) are the best real candidates found, but
+  neither is authoritative for groomed downhill terrain, and they
+  disagree substantially (see Checks). This step's terrain-by-ability-
+  class output should be read as "here is the range depending on which
+  unsourced convention you pick," not as a single confident split.
+- The lift crosswalk proposes matches for all 7 currently-built OSM
+  lifts, but the master plan's per-lift table has 27 distinct map_refs
+  across all phases (most numbered lifts do not exist yet). One match
+  (OSM "Little Bit") has two disagreeing signals and needs a human
+  decision (confirmed_by_jason); the other 6 are unreviewed proposals,
+  not confirmed identities, even though their deltas are small.
 - C008 remains unchecked; if it can never be opened, note that
   explicitly rather than treating "could not check" as "confirmed."
-- OSM's own lift/run naming and segmentation differs from the master
-  plan (C053); the proposed lift crosswalk's match_basis and
-  confirmed_by_jason columns exist specifically to make that mapping
-  auditable rather than asserted.
+- Only the 116 currently-mapped OSM runs and 7 currently-built OSM lifts
+  are covered. Planned-but-unbuilt lifts/runs from later master-plan
+  phases have no OSM geometry and are not part of this spatial analysis.
 
 ## Status
 
-built (CCC reproduction); spatial terrain analysis proposed, not built
+built
 
 ## Changelog
 
@@ -212,6 +219,21 @@ built (CCC reproduction); spatial terrain analysis proposed, not built
   notebooks/03_terrain_and_capacity.ipynb, reproduced all 4 phase CCC
   totals within rounding tolerance. LiDAR/slope analysis left open
   pending DEM access.
+- 2026-09-10: verified DEM/OSM access in a Phase 1 test; proposed a
+  spatial method.
+- 2026-09-11: built the spatial addition. Real AOI (1,248 ha, 1.2% off
+  C032), DEM slope/aspect via windowed HRDEM reads (no full-tile
+  download), a 7-lift crosswalk against the plan's per-lift table (one
+  genuine match ambiguity surfaced, not hidden), and per-run stats for
+  all 116 OSM runs. Ability-class thresholds resolved as an explicit,
+  sensitivity-tested judgment call (research-scout found no sourced
+  threshold; C066-C070). notebook-reviewer (fresh subagent) found four
+  real issues, all fixed: a hand-typed C032 percentage in markdown, a
+  Checks cell that printed but didn't assert the lift-vertical-rise
+  tolerance, missing tunable thresholds in the parameters cell, and 9
+  runs silently getting NaN stats from a too-narrow DEM clip (fixed by
+  clipping to the union of AOI/lift/run bounds instead of the AOI
+  alone).
 - 2026-09-10: verified real DEM (S048/C051) and OSM lift/run/AOI access
   (S050/C052/C053/C063) in a Phase 1 access test; proposed a spatial
   terrain method above, awaiting approval before any notebook changes.
