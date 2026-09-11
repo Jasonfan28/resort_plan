@@ -3,7 +3,7 @@
     "n_sources": 37,
     "n_claims": 50,
     "claims_by_status": {
-      "agent-checked": 43,
+      "human-verified": 43,
       "needs-review": 7
     }
   },

@@ -3,7 +3,7 @@
 <html lang="en">
 <head><meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>02_planning_documents</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>09_report</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <style type="text/css">
     pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -7796,72 +7796,32 @@ a.anchor-link {
 <!-- End of mermaid configuration --></head>
 <body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
 <main>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=37af7c5d">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d3c6896d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="02-Planning-documents">02 Planning documents<a class="anchor-link" href="#02-Planning-documents">¶</a></h1><p>Transcribes the figures the RMR Master Plan Update (2019, S034), its Appendix A (S011), and the City's 2024 Housing Needs Report (S013) actually state, into structured tables other steps can read instead of re-parsing the source PDFs. This notebook does not calculate anything of its own; every value here traces to a claim ID, and step 03/05/06 do the modeling that uses these tables.</p>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h1 id="Revelstoke-resort-capacity-and-workforce-housing">Revelstoke resort capacity and workforce housing<a class="anchor-link" href="#Revelstoke-resort-capacity-and-workforce-housing">¶</a></h1><p>This report's prose is assembled in code cells from data/processed files, with every factual sentence carrying a citation from <code>cite()</code>. Per CLAUDE.md rule 7, no number below is typed by hand: everything is an f-string built from a variable loaded from data/processed. <code>tools/check_citations.py --report</code> enforces that every claim ID cited here is human-verified with a source that has passed verification.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs celltag_parameters" id="cell-id=617dc4fd">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput celltag_parameters" id="cell-id=a610e27e">
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8d37ae25">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [1]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">research_dir</span> <span class="o">=</span> <span class="s2">"research"</span>
-<span class="n">output_dir</span> <span class="o">=</span> <span class="s2">"data/processed"</span>
-</pre></div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="Load-the-ledger">Load the ledger<a class="anchor-link" href="#Load-the-ledger">¶</a></h2><p>cite() will raise if any claim used below is not human-verified with a passed source, which is the guarantee this report rests on.</p>
 </div>
 </div>
 </div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=771638bd">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Load-the-ledger">Load the ledger<a class="anchor-link" href="#Load-the-ledger">¶</a></h2><p>Same guarded loader as every other notebook, so a CSV quoting error raises here rather than silently under-counting claims.</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=a3db4eda">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [2]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-
-<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">"src"</span><span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">resort.ledger</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_ledger</span>
-
-<span class="n">ledger</span> <span class="o">=</span> <span class="n">read_ledger</span><span class="p">(</span>
-    <span class="n">claims_path</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">research_dir</span><span class="si">}</span><span class="s2">/claims.csv"</span><span class="p">,</span>
-    <span class="n">sources_path</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">research_dir</span><span class="si">}</span><span class="s2">/sources.csv"</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="n">claims</span> <span class="o">=</span> <span class="n">ledger</span><span class="p">[</span><span class="s2">"claims"</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">claims</span><span class="p">)</span><span class="si">}</span><span class="s2"> claims loaded"</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noInput" id="cell-id=021ee64e">
 <div class="jp-Cell-outputWrapper">
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>50 claims loaded
 </pre>
@@ -7870,384 +7830,339 @@ a.anchor-link {
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=97eabc6d">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=23758cc9">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="CCC-by-phase-(from-Appendix-A,-via-claim-C025)">CCC by phase (from Appendix A, via claim C025)<a class="anchor-link" href="#CCC-by-phase-(from-Appendix-A,-via-claim-C025)">¶</a></h2><p>The appendix's own tables give one total per phase. Written as a small table rather than four separate variables so step 03 can join it against whatever it derives from the per-lift data.</p>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="A-small-citation-helper">A small citation helper<a class="anchor-link" href="#A-small-citation-helper">¶</a></h2><p>Several sentences below cite multiple claims that share the same source, or sources with the same organizational author and no year, which <code>cite()</code> alone would print as repeated identical labels back to back (e.g. two copies of <code>(City of Revelstoke)</code>). <code>cite_many</code> calls <code>cite()</code> for every claim ID (so every one is still individually checked as human-verified with a passed source) but only prints each distinct label once, in first-seen order.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=51490405">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput" id="cell-id=a2d78421">
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=87fda8f2">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [3]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-
-<span class="k">assert</span> <span class="n">claims</span><span class="p">[</span><span class="s2">"C025"</span><span class="p">][</span><span class="s2">"source_id"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"S011"</span>
-<span class="n">ccc_by_phase</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-    <span class="p">[</span>
-        <span class="p">{</span><span class="s2">"phase"</span><span class="p">:</span> <span class="s2">"Phase 1 (Existing)"</span><span class="p">,</span> <span class="s2">"ccc_skiers"</span><span class="p">:</span> <span class="mi">4545</span><span class="p">},</span>
-        <span class="p">{</span><span class="s2">"phase"</span><span class="p">:</span> <span class="s2">"Phase 2"</span><span class="p">,</span> <span class="s2">"ccc_skiers"</span><span class="p">:</span> <span class="mi">9529</span><span class="p">},</span>
-        <span class="p">{</span><span class="s2">"phase"</span><span class="p">:</span> <span class="s2">"Phase 3"</span><span class="p">,</span> <span class="s2">"ccc_skiers"</span><span class="p">:</span> <span class="mi">11572</span><span class="p">},</span>
-        <span class="p">{</span><span class="s2">"phase"</span><span class="p">:</span> <span class="s2">"Buildout"</span><span class="p">,</span> <span class="s2">"ccc_skiers"</span><span class="p">:</span> <span class="mi">18167</span><span class="p">},</span>
-    <span class="p">]</span>
-<span class="p">)</span>
-<span class="n">ccc_by_phase</span>
-</pre></div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="Load-every-data/processed-output-this-report-draws-on">Load every data/processed output this report draws on<a class="anchor-link" href="#Load-every-data/processed-output-this-report-draws-on">¶</a></h2><p>One place to load everything, so each section below only formats numbers it already has, rather than reading files throughout the report.</p>
 </div>
 </div>
 </div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[3]:</div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-<thead>
-<tr style="text-align: right;">
-<th></th>
-<th>phase</th>
-<th>ccc_skiers</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<th>0</th>
-<td>Phase 1 (Existing)</td>
-<td>4545</td>
-</tr>
-<tr>
-<th>1</th>
-<td>Phase 2</td>
-<td>9529</td>
-</tr>
-<tr>
-<th>2</th>
-<td>Phase 3</td>
-<td>11572</td>
-</tr>
-<tr>
-<th>3</th>
-<td>Buildout</td>
-<td>18167</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=383891ea">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Employee-housing,-Phase-2-plan-(claim-C031)">Employee housing, Phase 2 plan (claim C031)<a class="anchor-link" href="#Employee-housing,-Phase-2-plan-(claim-C031)">¶</a></h2><p>The master plan states a range of beds per building, not a single number, and a minimum building count, not a maximum. Both bounds are kept in the code cell below rather than picking a midpoint, since picking one would be a judgment call this notebook should not make silently.</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=898249e0">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [4]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">claims</span><span class="p">[</span><span class="s2">"C031"</span><span class="p">][</span><span class="s2">"source_id"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"S034"</span>
-<span class="n">employee_housing_phase2</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"min_buildings"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-    <span class="s2">"beds_per_building_min"</span><span class="p">:</span> <span class="mi">150</span><span class="p">,</span>
-    <span class="s2">"beds_per_building_max"</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
-    <span class="s2">"lower_village_hectares"</span><span class="p">:</span> <span class="mf">9.19</span><span class="p">,</span>
-    <span class="s2">"total_beds_min"</span><span class="p">:</span> <span class="mi">3</span> <span class="o">*</span> <span class="mi">150</span><span class="p">,</span>
-    <span class="s2">"total_beds_max"</span><span class="p">:</span> <span class="mi">3</span> <span class="o">*</span> <span class="mi">200</span><span class="p">,</span>
-<span class="p">}</span>
-<span class="n">employee_housing_phase2</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>{'min_buildings': 3,
- 'beds_per_building_min': 150,
- 'beds_per_building_max': 200,
- 'lower_village_hectares': 9.19,
- 'total_beds_min': 450,
- 'total_beds_max': 600}</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a9515fec">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Housing-need,-5-year-and-20-year-(claims-C026-C029)">Housing need, 5-year and 20-year (claims C026-C029)<a class="anchor-link" href="#Housing-need,-5-year-and-20-year-(claims-C026-C029)">¶</a></h2><p>Figure 26 of the 2024 HNR gives six components for both windows; kept as a full table, not just the two totals, since step 06 needs the components (the vacancy-rate component in particular ties to C029's separate rental-vacancy finding).</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=0e4d3f47">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">claim_id</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"C026"</span><span class="p">,</span> <span class="s2">"C027"</span><span class="p">,</span> <span class="s2">"C028"</span><span class="p">,</span> <span class="s2">"C029"</span><span class="p">):</span>
-    <span class="k">assert</span> <span class="n">claims</span><span class="p">[</span><span class="n">claim_id</span><span class="p">][</span><span class="s2">"source_id"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"S013"</span>
-
-<span class="n">housing_need</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-    <span class="p">[</span>
-        <span class="p">{</span><span class="s2">"component"</span><span class="p">:</span> <span class="s2">"A: Extreme core housing need"</span><span class="p">,</span> <span class="s2">"years_5"</span><span class="p">:</span> <span class="mi">19</span><span class="p">,</span> <span class="s2">"years_20"</span><span class="p">:</span> <span class="mi">75</span><span class="p">},</span>
-        <span class="p">{</span><span class="s2">"component"</span><span class="p">:</span> <span class="s2">"B: Homelessness"</span><span class="p">,</span> <span class="s2">"years_5"</span><span class="p">:</span> <span class="mi">13</span><span class="p">,</span> <span class="s2">"years_20"</span><span class="p">:</span> <span class="mi">26</span><span class="p">},</span>
-        <span class="p">{</span><span class="s2">"component"</span><span class="p">:</span> <span class="s2">"C: Suppressed household formation"</span><span class="p">,</span> <span class="s2">"years_5"</span><span class="p">:</span> <span class="mi">86</span><span class="p">,</span> <span class="s2">"years_20"</span><span class="p">:</span> <span class="mi">345</span><span class="p">},</span>
-        <span class="p">{</span><span class="s2">"component"</span><span class="p">:</span> <span class="s2">"D: Household growth"</span><span class="p">,</span> <span class="s2">"years_5"</span><span class="p">:</span> <span class="mi">504</span><span class="p">,</span> <span class="s2">"years_20"</span><span class="p">:</span> <span class="mi">1155</span><span class="p">},</span>
-        <span class="p">{</span><span class="s2">"component"</span><span class="p">:</span> <span class="s2">"E: Vacancy rate adjustment"</span><span class="p">,</span> <span class="s2">"years_5"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">"years_20"</span><span class="p">:</span> <span class="mi">14</span><span class="p">},</span>
-        <span class="p">{</span><span class="s2">"component"</span><span class="p">:</span> <span class="s2">"F: Demand buffer"</span><span class="p">,</span> <span class="s2">"years_5"</span><span class="p">:</span> <span class="mi">188</span><span class="p">,</span> <span class="s2">"years_20"</span><span class="p">:</span> <span class="mi">752</span><span class="p">},</span>
-    <span class="p">]</span>
-<span class="p">)</span>
-<span class="n">housing_need</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-<thead>
-<tr style="text-align: right;">
-<th></th>
-<th>component</th>
-<th>years_5</th>
-<th>years_20</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<th>0</th>
-<td>A: Extreme core housing need</td>
-<td>19</td>
-<td>75</td>
-</tr>
-<tr>
-<th>1</th>
-<td>B: Homelessness</td>
-<td>13</td>
-<td>26</td>
-</tr>
-<tr>
-<th>2</th>
-<td>C: Suppressed household formation</td>
-<td>86</td>
-<td>345</td>
-</tr>
-<tr>
-<th>3</th>
-<td>D: Household growth</td>
-<td>504</td>
-<td>1155</td>
-</tr>
-<tr>
-<th>4</th>
-<td>E: Vacancy rate adjustment</td>
-<td>4</td>
-<td>14</td>
-</tr>
-<tr>
-<th>5</th>
-<td>F: Demand buffer</td>
-<td>188</td>
-<td>752</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4224d496">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Write-outputs">Write outputs<a class="anchor-link" href="#Write-outputs">¶</a></h2><p>One file per table, so step 03 (CCC), step 05 (employee housing), and step 06 (housing need) each read only what they need.</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=1308848a">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [6]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-
-<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">ccc_by_phase</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s2">/02_ccc_by_phase.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span>
-<span class="n">housing_need</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s2">/02_housing_need_by_component.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s2">/02_employee_housing_phase2.json"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">employee_housing_phase2</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"wrote 02_ccc_by_phase.csv, 02_housing_need_by_component.csv, 02_employee_housing_phase2.json"</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noInput" id="cell-id=d7fe050f">
 <div class="jp-Cell-outputWrapper">
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>wrote 02_ccc_by_phase.csv, 02_housing_need_by_component.csv, 02_employee_housing_phase2.json
+<pre>all inputs loaded
 </pre>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=40bc55b0">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=aaf27217">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Checks">Checks<a class="anchor-link" href="#Checks">¶</a></h2><p>The component columns must sum to the report's own stated totals for each window; if they do not, either a transcription error was made here or the source's own total is inconsistent with its components, and either way this should fail loudly rather than pass a wrong total downstream.</p>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="Scope">Scope<a class="anchor-link" href="#Scope">¶</a></h2><p>Displayed via <code>Markdown()</code> from a code cell rather than typed directly, even though this section has no numbers, to keep the whole report in one consistent pattern.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=1141d8f3">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="k">assert</span> <span class="n">housing_need</span><span class="p">[</span><span class="s2">"years_5"</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="mi">814</span><span class="p">,</span> <span class="n">housing_need</span><span class="p">[</span><span class="s2">"years_5"</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-<span class="k">assert</span> <span class="n">housing_need</span><span class="p">[</span><span class="s2">"years_20"</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2367</span><span class="p">,</span> <span class="n">housing_need</span><span class="p">[</span><span class="s2">"years_20"</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-<span class="k">assert</span> <span class="n">ccc_by_phase</span><span class="p">[</span><span class="s2">"ccc_skiers"</span><span class="p">]</span><span class="o">.</span><span class="n">is_monotonic_increasing</span><span class="p">,</span> <span class="s2">"CCC should rise phase over phase"</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"checks passed"</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noInput" id="cell-id=7d4fd6bc">
 <div class="jp-Cell-outputWrapper">
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-OutputArea-output" data-mime-type="text/markdown" tabindex="0">
+<p>Revelstoke Mountain Resort (RMR) publishes a master plan governing its
+on-mountain development. This report follows one chain from that plan
+through to a workforce-housing estimate: terrain and lifts set skier
+capacity, snow reliability would adjust that capacity, capacity sets
+workforce size, workforce sets housing demand, and land capacity shows
+where that housing could go. Two links in that chain are incomplete as
+noted in their own sections below; this report states that plainly
+rather than filling the gap with an unsourced number.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=694d6a90">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="Terrain-and-capacity">Terrain and capacity<a class="anchor-link" href="#Terrain-and-capacity">¶</a></h2><p>States the appendix's formula and totals, then the actual reproduction result computed in step 03, distinguishing the cited claim from the notebook's own check.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noInput" id="cell-id=c301f1c7">
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-OutputArea-output" data-mime-type="text/markdown" tabindex="0">
+<p>RMR's master plan appendix states a comfortable carrying capacity (CCC)
+of 18,167 skiers at full buildout (Province of British Columbia 2019), using a
+formula that compares each lift's vertical transport capacity against
+skier demand for vertical, weighted by ability level (Williams 2024)
+(Province of British Columbia 2019). This report reproduced every one of the appendix's
+63 (phase, lift) rows from that formula: the largest per-lift
+difference was 0.5 skiers and the largest phase-total
+difference was 1 skiers, both within rounding.</p>
+<p>The resort's own terrain and elevation figures
+(Province of British Columbia 2019) give the elevation range used for
+snow reliability below.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=131ca1ad">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="Snow-reliability">Snow reliability<a class="anchor-link" href="#Snow-reliability">¶</a></h2><p>Reports what was actually built (elevation bands, a historical baseline) and is explicit that the projection half of this question is not modeled, rather than silently omitting it.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noInput" id="cell-id=725894c2">
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-OutputArea-output" data-mime-type="text/markdown" tabindex="0">
+<p>RMR's own historical snowfall figures are 9-14 metres a
+year (Province of British Columbia 2019). This report built 3 elevation bands
+between the master plan's own stated elevation points (from
+(Province of British Columbia 2019), already cited above) as the basis for a
+snow-reliability indicator.</p>
+<p>A dataset exists for projecting snowfall under future emissions
+scenarios (Canadian Centre for Climate Services) (Environment and Climate Change Canada), but this report
+does not use it: the specific derived snow-water-equivalent product's
+listed access path did not resolve this session, and the base dataset
+alone does not include snow variables (Environment and Climate Change Canada)
+(Canadian Centre for Climate Services). No projected or snow-adjusted capacity figure is
+stated anywhere in this report as a result.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=992301bd">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="Workforce">Workforce<a class="anchor-link" href="#Workforce">¶</a></h2><p>Cites the one comparator ratio this report's employee estimate rests on, and states the sensitivity band's own nature (a modeling choice, not a second source) directly in the same sentence as its citation.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noInput" id="cell-id=dc562bd2">
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-OutputArea-output" data-mime-type="text/markdown" tabindex="0">
+<p>RMR's stated employee figures range from "RMR employs over 200 staff during the winter season" (The Working Holiday Club)
+to "RMR employs around 500 people, including hotel and food and beverage workers" (Revelstoke Current); this report carries both rather
+than picking one, since neither source rules out the other describing a
+different subset or point in time.</p>
+<p>To estimate workforce at buildout capacity, this report uses the one
+public source found giving both a resort's approved capacity and its
+peak employee count together: Parks Canada's Sunshine Village site
+guidelines (Parks Canada 2018). Applying that single ratio with a
+symmetric sensitivity band (a modeling choice, not a second source)
+gives 1,484-2,755 employees at buildout (2,119 at the band's
+centre).</p>
+<p>The master plan's own Phase 2 employee housing plan provides
+450-600 beds (Province of British Columbia 2019). RMR itself has
+separately stated "With its new building, RMR can house over 400 people on site" (Revelstoke Review 2025) and, in an earlier
+2022 plan, "RMR's staff housing plan is three buildings with 160 beds each" (Revelstoke Mountain Resort 2022). Subtracting the housing
+plan's own range from the buildout employee estimate leaves roughly
+1,519-1,669 workers needing housing elsewhere, at the
+sensitivity band's centre.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6d0c57a0">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="Housing-supply-and-affordability">Housing supply and affordability<a class="anchor-link" href="#Housing-supply-and-affordability">¶</a></h2><p>Reports the City's own housing-need and rental-vacancy figures without projecting them forward.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noInput" id="cell-id=5af1aac7">
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-OutputArea-output" data-mime-type="text/markdown" tabindex="0">
+<p>The City of Revelstoke's own Housing Needs Report states a 5-year
+housing need of 814 units and a 20-year need of 2,367
+units (City of Revelstoke) (Urban Systems 2024), against
+a 2021 rental vacancy rate of 1.4%, below the
+3-5% range the report itself calls healthy.</p>
+<p>The resort and the municipality are both named exempt from the
+province's short-term-rental principal-residence requirement, while the
+surrounding rural electoral area is not (Revelstoke Mountaineer 2024)
+(Province of British Columbia). This report does not compare rents against
+resort wages: no resort-specific wage figure or dollar-value renter
+affordability table was found this session.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7af09e44">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="Land-capacity">Land capacity<a class="anchor-link" href="#Land-capacity">¶</a></h2><p>Reports the real zoning distribution and resort-lands area, and states plainly that this does not amount to a unit-capacity figure.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noInput" id="cell-id=afd6cade">
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-OutputArea-output" data-mime-type="text/markdown" tabindex="0">
+<p>Querying the City of Revelstoke's own zoning data live shows
+39 distinct zone codes across the municipality, the largest by
+parcel count being Ground-Oriented Dwelling Zone (2,891
+parcels) (City of Revelstoke). The Official Community Plan's Resort
+Lands Development Permit Area covers about 811 hectares
+(City of Revelstoke), live data made possible by
+the City's own Zoning and Parcel Fabric map services
+(City of Revelstoke).</p>
+<p>This report does not convert either figure into a number of housing
+units: the zoning bylaw's density provisions and a way to identify
+which specific parcels are vacant or underused were not found this
+session. The Oscar Lands Master Plan, approved in February 2024
+(City of Revelstoke), has not been read as a document to check whether
+it states its own unit-capacity figures.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f8309fe5">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="What-this-report-does-not-claim">What this report does not claim<a class="anchor-link" href="#What-this-report-does-not-claim">¶</a></h2><p>A plain list of the open gaps, so a reader does not have to infer them from what is missing.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noInput" id="cell-id=e5bc7c3a">
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-OutputArea-output" data-mime-type="text/markdown" tabindex="0">
+<ul>
+<li>No snow-adjusted or climate-projected capacity figure exists for any
+phase.</li>
+<li>No land-capacity figure in units of housing exists.</li>
+<li>The workforce estimate rests on one comparator resort's ratio, not
+RMR's own, and on a sensitivity band that is a modeling choice.</li>
+<li>RMR's own current headcount is carried as two disagreeing figures
+(Revelstoke Current) (The Working Holiday Club), not resolved to one.</li>
+<li>This report's own verified demand-buffer figure for Revelstoke is
+1.63 (Urban Systems 2024). A secondary source (not itself
+independently verified this session) states a different, unconfirmed
+figure for what it calls the same provincial method; that
+disagreement is recorded in steps/06's Open issues and is not
+resolved here.</li>
+<li>Ownership affordability figures from the Housing Needs Report are not
+yet human-verified and are not cited here.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a505ab93">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="Write-outputs">Write outputs<a class="anchor-link" href="#Write-outputs">¶</a></h2><p>No new data/processed file: this report only reads existing outputs and cites existing claims, so there is nothing new to write except confirmation of which claims it used.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noInput" id="cell-id=dfa26877">
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>checks passed
+<pre>wrote 09_cited_claims.json (29 distinct claims)
 </pre>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1f9bddc6">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=91e0077c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="Checks">Checks<a class="anchor-link" href="#Checks">¶</a></h2><p>Every claim ID this report cites must actually be human-verified with a passed source (cite() already enforces this per call, so if the report rendered above without error, this cell mainly documents the guarantee explicitly).</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noInput" id="cell-id=7d322623">
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>checks passed: all 29 cited claims are human-verified with a passed source
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=de716b66">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="Versions">Versions<a class="anchor-link" href="#Versions">¶</a></h2>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=35807aef">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [8]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">importlib.metadata</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"python"</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">pkg</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"pandas"</span><span class="p">]:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">pkg</span><span class="p">,</span> <span class="n">importlib</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">version</span><span class="p">(</span><span class="n">pkg</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noInput" id="cell-id=a2fdbf44">
 <div class="jp-Cell-outputWrapper">
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>python 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
 pandas 3.0.5
