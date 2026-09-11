@@ -1,0 +1,12 @@
+{
+  "grid_cell_lat": 50.95833206176758,
+  "grid_cell_lon": -118.125,
+  "grid_footprint_km": [
+    9,
+    6
+  ],
+  "grid_cell_dem_min_m": 436.9,
+  "grid_cell_dem_max_m": 2455.4,
+  "aoi_dem_min_m": 473.9,
+  "aoi_dem_max_m": 2354.7
+}

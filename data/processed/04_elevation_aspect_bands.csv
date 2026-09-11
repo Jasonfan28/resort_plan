@@ -1,0 +1,37 @@
+aspect_scheme,band,aspect,area_ha
+4-way,Base to lift top,S,668.31
+4-way,Base to lift top,E,282.79
+4-way,Base to lift top,W,203.09
+4-way,Base to lift top,N,76.75
+4-way,Lift top to sub peak,W,6.39
+4-way,Lift top to sub peak,S,5.68
+4-way,Lift top to sub peak,E,3.3
+4-way,Lift top to sub peak,N,1.51
+4-way,Sub peak to summit,W,0.16
+4-way,Sub peak to summit,S,0.13
+4-way,Sub peak to summit,E,0.1
+4-way,Sub peak to summit,N,0.05
+8-way,Base to lift top,S,358.02
+8-way,Base to lift top,SW,323.35
+8-way,Base to lift top,SE,195.3
+8-way,Base to lift top,E,143.71
+8-way,Base to lift top,NE,78.26
+8-way,Base to lift top,W,76.54
+8-way,Base to lift top,N,35.89
+8-way,Base to lift top,NW,19.88
+8-way,Lift top to sub peak,SW,4.14
+8-way,Lift top to sub peak,W,3.51
+8-way,Lift top to sub peak,S,3.15
+8-way,Lift top to sub peak,NE,1.9
+8-way,Lift top to sub peak,SE,1.83
+8-way,Lift top to sub peak,E,1.49
+8-way,Lift top to sub peak,N,0.61
+8-way,Lift top to sub peak,NW,0.24
+8-way,Sub peak to summit,SW,0.11
+8-way,Sub peak to summit,W,0.08
+8-way,Sub peak to summit,SE,0.06
+8-way,Sub peak to summit,S,0.05
+8-way,Sub peak to summit,E,0.05
+8-way,Sub peak to summit,NE,0.03
+8-way,Sub peak to summit,N,0.03
+8-way,Sub peak to summit,NW,0.02

@@ -66,94 +66,131 @@ reliability indicator can be validated against historical snowfall?
   vertical figure, which match exactly.
 - (judgment call) Define the reliability indicator as projected seasonal
   snowfall divided by the historical baseline, per elevation band. This
-  formula is not itself backed by a claim; it was recorded as a method,
-  not evaluated, before C064. See the proposed method below for how it
-  would now actually be run.
+  formula is not itself backed by a claim.
 
-### Proposed spatial + climate method (not yet built)
+### Spatial + climate method
 
 - (evidence) **Elevation-band area and run length**: using step 03's AOI
-  and DEM, replace the current 3-row band table with real area (and, if
-  step 03's runs layer exists by then, run length) per elevation band x
-  aspect class. Aspect binning (e.g. 4-way vs. 8-way compass bins) is a
-  judgment call, sensitivity-tested by reporting both.
-- (evidence) **Climate, now that access works (C064)**: pull 30-year-
-  mean annual total snowfall (sntot) for at least ssp245 and ssp585, at
-  a baseline period and a mid-century period, via OPeNDAP subsetting
-  (no full-file download). Overlay the grid cell(s) covering RMR on the
-  DEM/AOI and report the gap between the grid cell's own nominal
-  elevation and the AOI's actual terrain elevation range, before
-  applying any lapse-rate adjustment. A lapse rate to adjust grid-cell
-  snowfall to actual terrain elevation is a judgment call needing a
-  source or a labelled, sensitivity-tested value (e.g. a standard
-  environmental lapse rate vs. a snow-specific one), not yet chosen.
-  First resolve the C035/C064 conflict about which variable (the
-  indices product's sntot, vs. the base archive's raw prsn) is the
-  right input, since build should not silently pick one.
-- (optional, separate approval required) **Sentinel-2 snow presence**:
-  not part of this proposal. Only to be attempted if approved
-  separately after Phase 1, and even then it validates snow cover
-  (presence/absence on a date), not annual snowfall depth -- C034 is a
-  different quantity and cannot be used to validate it quantitatively,
-  only for a plausibility check (e.g. no snow in July, snow present at
-  high elevation in April).
+  and DEM (via the shared src/resort/dem.py module), computed real area
+  per elevation band x aspect class, and run length by elevation band
+  from step 03's 116 OSM runs. Aspect binning (4-way vs. 8-way compass
+  bins) is a judgment call, sensitivity-tested by reporting both -- they
+  agree closely (see Outputs), so the binning choice does not change the
+  picture here.
+- (evidence) **Climate, now that access works (C064)**: pulled 30-year-
+  mean annual total snowfall (sntot, the indices/ensemble-percentiles
+  product) for ssp245 and ssp585, at a 1991-2020 baseline and a
+  2041-2070 mid-century period, via OPeNDAP subsetting (no full-file
+  download) from S015's corrected path. Did **not** resolve the
+  C035/C064 conflict over whether the base archive's raw prsn variable
+  should also be used -- sntot was built on its own since it is the
+  product this step's evidence already pointed to and does not depend
+  on that conflict's answer. Left open (see Open issues).
+- (evidence) **Grid-cell-vs-terrain elevation gap**: overlaid the
+  climate grid cell nearest the AOI centroid (derived from step 03's
+  AOI, C063 -- not a separately hardcoded coordinate) on the DEM and
+  reported the gap between the grid cell's own terrain elevation range
+  and the AOI's own (see Outputs). No lapse-rate adjustment was
+  attempted, per this step's scope -- a lapse rate remains an
+  unresolved judgment call (see Open issues).
+- (judgment call, sensitivity-tested) **Snow-to-water density**: sntot
+  is in mm of snow water equivalent; C034's historical baseline is in
+  metres of snow depth. No source ties a specific snow-to-water ratio to
+  Revelstoke, so the reliability ratio was computed across three
+  plausible ratios (8, 10, 13 cm snow per 10 mm SWE) and both historical
+  bounds, for both the baseline and mid-century periods -- not a single
+  picked value. Running the same ratios against the baseline period
+  (which has no climate-change trend) doubles as a sanity check on the
+  whole conversion approach; see Checks for the result.
+- (not built) **Sentinel-2 snow presence**: out of scope for this step;
+  would need separate approval, and even then only validates snow
+  presence/absence on a date, not annual snowfall depth.
 
 ## Outputs
 
 - data/processed/04_elevation_bands.csv
 - data/processed/04_historical_snowfall.json
-- (not yet produced: any projected-snowfall or reliability-ratio output)
-- **Proposed additions:**
-  - data/processed/04_elevation_aspect_bands.csv (area, and run length
-    once step 03 provides it, by elevation band x aspect)
-  - data/processed/04_climate_grid_overlay.csv or .json (grid cell(s)
-    over the AOI, nominal grid elevation vs. actual terrain elevation
-    range, before any adjustment)
-  - data/processed/04_snow_projection.csv (sntot by SSP x period, once
-    the C035/C064 variable question and the lapse-rate judgment call are
-    resolved) -- or, if either blocks it, an explicit note of exactly
-    what is still missing, not a filled-in number.
+- data/processed/04_elevation_aspect_bands.csv (area by elevation band x
+  aspect, 4-way and 8-way). Last run: base-to-lift-top band totals
+  1,230.94 ha (4-way) / 1,230.95 ha (8-way); lift-top-to-sub-peak 16.88 /
+  16.87 ha; sub-peak-to-summit 0.44 / 0.43 ha -- the two aspect schemes
+  agree to within rounding.
+- data/processed/04_run_length_by_band.csv. Last run: 115.1 km in the
+  base-to-lift-top band, 1.63 km in lift-top-to-sub-peak, 0 km in
+  sub-peak-to-summit (no run's sampled elevation falls that high).
+- data/processed/04_snow_projection.csv (sntot p10/p50/p90, mm SWE, by
+  SSP x horizon). Last run, p50: ssp245 592.3 mm (1991-2020) -> 534.8 mm
+  (2041-2070); ssp585 589.3 mm (1991-2020) -> 494.9 mm (2041-2070).
+- data/processed/04_climate_grid_overlay.json (grid cell vs. AOI terrain
+  elevation range). Last run: grid cell DEM range 436.9-2,455.4 m vs.
+  AOI DEM range 473.9-2,354.7 m -- the grid cell's footprint spans wider
+  than the AOI on both ends, consistent with a ~9x6 km cell sitting over
+  terrain well beyond the resort's own boundary.
+- data/processed/04_reliability_sensitivity.csv (reliability ratio by
+  SSP x horizon x snow-to-water ratio x historical bound). See Checks
+  for the baseline sanity-check result.
 
 ## Checks
 
 - Band boundaries strictly increasing; base band's vertical equals the
   plan's stated lift-accessed vertical; historical range's low bound
-  under its high bound; a `projections_available` flag stays False so a
-  downstream step cannot mistake an unrun projection for a zero result.
+  under its high bound.
+- Elevation-aspect band areas sum to the AOI's total area (1,248.26 ha),
+  for both aspect schemes -- an independent-number check against step
+  03's own AOI area, not just internal consistency.
+- Run-length-by-band total equals the sum of every run's own geometry
+  length exactly.
+- Grid-cell-vs-terrain elevation gap reported as a number (above), no
+  lapse-rate adjustment applied.
+- **Baseline sanity check against C034**: running the same snow-to-water
+  ratios against the 1991-2020 baseline (no climate-change trend
+  involved) gives a reliability ratio of 0.34-0.86 across both SSPs and
+  all three ratios -- never reaching 1.0 even at the most generous
+  tested ratio. The mid-century ratio (0.28-0.77) is not meaningfully
+  different in shape. This means the gap between C034 and the climate
+  data is dominated by the unit-conversion/data mismatch, not by a
+  detectable mid-century decline this method can isolate. Reported
+  plainly rather than left implicit; see Open issues.
 - Last run: all checks passed.
-- **Proposed additions:**
-  - Elevation-aspect band areas sum to the AOI's total area (an
-    independent-number check against step 03's own AOI area).
-  - Grid-cell-vs-terrain elevation gap reported explicitly (a number,
-    not just a claim it exists), before any lapse-rate adjustment.
-  - If the OPeNDAP read fails when actually attempted in a notebook,
-    record the exact error and stop that part, the same discipline this
-    step already applied once to the dead THREDDS link.
 
 ## Open issues
 
-- **Largely resolved (2026-09-10):** the SWE/indices access blocker is
-  gone (C064). What remains before projections can actually be pulled:
-  (a) resolve the C035/C064 conflict over which snowfall variable is
-  authoritative, and (b) choose and source (or label as a sensitivity-
-  tested judgment call) a lapse rate to adjust grid-cell snowfall to
-  actual terrain elevation.
+- **Still open:** the C035/C064 conflict over which snowfall variable
+  (indices product's sntot vs. base archive's raw prsn) is authoritative
+  was not resolved -- this build used sntot on its own since it is the
+  product already backed by this step's evidence, but a future revisit
+  should settle whether prsn changes the picture.
+- **Still open:** no lapse rate was applied to adjust grid-cell snowfall
+  to actual terrain elevation; this step only reports the elevation gap
+  (above), by design. A lapse-rate adjustment, if attempted, needs its
+  own source or sensitivity-tested judgment call.
+- **New finding:** the baseline sanity check (see Checks) shows the
+  climate data does not reproduce C034 even at the baseline period and
+  the most generous tested snow-to-water ratio (reliability ratio tops
+  out at 0.86, never reaching 1.0). This means the reliability indicator
+  as currently built cannot distinguish "RMR will get less snow" from
+  "the units/data don't line up the way this method assumes" -- it
+  should be read as a data-comparison exercise, not a validated forecast,
+  until that gap is explained (a likely candidate not yet checked: sntot
+  may already be an anomaly/delta relative to some reference period
+  rather than an absolute total, which would explain a low but non-zero
+  ratio; not confirmed against S015's own documentation this session).
 - A 10 km grid (C006) is coarse relative to a single resort's elevation
-  bands; the grid-cell-vs-terrain elevation gap check (proposed above)
-  is meant to make exactly how coarse it is visible as a number, not
-  just a general caveat.
+  bands; the grid-cell-vs-terrain elevation gap check makes how coarse
+  it is visible as a number (436.9-2,455.4 m vs. AOI's 473.9-2,354.7 m).
 - The historical snowfall figures (C034) give no year range or
   measurement method, which limits how precisely a reliability
-  indicator could ever be validated against them even once projections
-  exist.
-- Sentinel-2 snow-cover work is explicitly out of scope for this
-  proposal; it needs separate approval and, even then, only validates
-  snow presence/absence, not the annual snowfall depth C034 states.
+  indicator could ever be validated against them.
+- Sentinel-2 snow-cover work remains out of scope; it needs separate
+  approval and, even then, only validates snow presence/absence, not
+  the annual snowfall depth C034 states.
+- Only the 116 currently-mapped OSM runs are covered for run-length-by-
+  band; planned-but-unbuilt runs from later master-plan phases have no
+  OSM geometry.
 
 ## Status
 
-draft (elevation bands + historical baseline built; climate access now
-confirmed working; spatial + climate method proposed, not yet built)
+built
 
 ## Changelog
 
@@ -170,3 +207,18 @@ confirmed working; spatial + climate method proposed, not yet built)
   before any notebook changes. Flagged a new C035/C064 conflict and an
   unresolved lapse-rate judgment call as remaining before an actual
   projected-snowfall number can be produced.
+- 2026-09-11: built the spatial + climate addition. Real elevation-band
+  x aspect area and run length from step 03's AOI/DEM/runs; real sntot
+  projections for ssp245/ssp585 at baseline and mid-century via OPeNDAP;
+  grid-cell-vs-terrain elevation gap reported; snow-to-water reliability
+  ratio computed as a three-way sensitivity table against both
+  historical bounds, at both horizons. notebook-reviewer (fresh
+  subagent) found three real issues, all fixed: a duplicated
+  "parameters" tag that silently broke `--scenario`/`-p` overrides for
+  every new-section output, a hardcoded climate-grid coordinate now
+  derived from step 03's own cited AOI centroid instead, and a missing
+  sanity check comparing the baseline climate period against C034 --
+  adding it surfaced the finding above (baseline ratio never reaches
+  1.0). Did not resolve the C035/C064 variable conflict; recorded as
+  still open rather than silently picked. No lapse-rate adjustment
+  attempted, per this step's scope.
