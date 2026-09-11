@@ -11,53 +11,76 @@ claim with cite(), presents this analysis for publication?
 
 ## Alternatives considered
 
-To be filled by `/step 09`.
+- Cite every claim individually inline, even when several land on the
+  same source. Rejected once rendered: back-to-back identical citation
+  labels (e.g. two copies of "(City of Revelstoke)") read as a
+  transcription mistake, not a deliberate multi-source citation. A
+  `cite_many()` helper (defined in the notebook) still calls `cite()`
+  on every claim ID individually, so each is still checked, but prints
+  only the distinct labels.
 
 ## Evidence
 
-No claims are tagged to this step directly. This step is prose plus
-cite() calls over claims already established (and, per CLAUDE.md rule 7,
-its numbers are built in code cells, not typed by hand), so it introduces
-no new factual claims of its own.
+No claims are tagged to this step directly; it cites claims already
+established elsewhere. Every human-verified claim used is listed in
+data/processed/09_cited_claims.json.
 
 ## Inputs
 
-To be filled by `/step 09`.
+- research/claims.csv, research/sources.csv (via read_ledger() and
+  cite())
+- data/processed/02_*, 03_*, 04_*, 05_*, 06_*, 07_*, 08_* (every prior
+  step's outputs)
 
 ## Method
 
-To be filled by `/step 09`.
+- (evidence) Every factual sentence's numbers are f-string
+  interpolations from a data/processed variable, never a literal typed
+  into the template; every factual sentence carries at least one
+  cite()/cite_many() call.
+- (judgment call) Only cite claims that are human-verified with a
+  passed source. Several related claims (C037-C039, C048) restate or
+  refine facts this report already cites via other, verified claims;
+  they are not yet human-verified themselves and are simply not used,
+  rather than cited and immediately failing the gate.
 
 ## Outputs
 
-To be filled by `/step 09`.
+- data/processed/09_cited_claims.json (the exact claim IDs cited, for
+  audit)
 
 ## Checks
 
-To be filled by `/step 09`.
+- Every cited claim ID must pass cite() without raising (human-verified
+  + source verified_exists=pass). tools/check_citations.py --report
+  passes.
+- Last run: all checks passed, 29 distinct claims cited.
 
 ## Open issues
 
-- Of 50 claims in research/claims.csv, 43 are now agent-checked and 7
-  remain needs-review, but 0 are human-verified. Per CLAUDE.md rule 4,
-  only the user can set human_verified/human-verified, and per
-  tools/check_citations.py --report, nothing can be cited in this
-  report until it reaches that status. This step is intentionally not
-  built: doing so would either produce a report that fails its own
-  citation gate, or tempt filling in a status that is not mine to set.
-  It is unblocked only by the user's own review, not by more research.
-- Step 08's synthesis output now exists (data/processed/08_scenario_table.csv),
-  so that dependency is satisfied; human-verified sign-off is the only
-  remaining blocker.
+- This report does not answer the snow-projection or land-unit-capacity
+  halves of the project's original questions, and says so explicitly in
+  its own "What this report does not claim" section, rather than
+  reading as complete.
+- C004 (demand-factor conflict), C008 (could not check), C023 (JS-only
+  portal, could not check), C037-C039 and C048 (never independently
+  verified, though closely related to cited claims) are not cited.
+- The RMR headcount conflict (C009 vs. C010) is stated as unresolved,
+  per CLAUDE.md rule 5, rather than picked.
 
 ## Status
 
-draft
+built
 
 ## Changelog
 
 - 2026-09-10: created.
-- 2026-09-10: reassessed once steps 01-08 were built. Left in draft:
-  43/50 claims are agent-checked, 0 are human-verified, and this step's
-  own citation gate requires human-verified before anything can be
-  written.
+- 2026-09-10: reassessed once steps 01-08 were built; left blocked on
+  human-verified sign-off.
+- 2026-09-10: user promoted all 43 then-agent-checked claims to
+  human-verified; built notebooks/09_report.ipynb citing 29 of them;
+  `check_citations.py --report` passes. Fixed two ledger bugs surfaced
+  while writing this report: cite() left a trailing space when a
+  source's year was blank, and several sources' authors fields
+  (embedded parentheticals/commas) produced garbled or oddly verbose
+  citation labels.

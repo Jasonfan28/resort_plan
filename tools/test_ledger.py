@@ -110,6 +110,13 @@ class LedgerTest(unittest.TestCase):
         )
         self.assertEqual(cite("C013", ledger), "(Nüst 2018)")
 
+    def test_missing_year_omits_trailing_space(self):
+        ledger = self._ledger(
+            sources=[_source("S014", "Environment and Climate Change Canada", "")],
+            claims=[_claim("C014", "S014", "human-verified")],
+        )
+        self.assertEqual(cite("C014", ledger), "(Environment and Climate Change Canada)")
+
     def test_unclosed_quote_raises_row_count_error(self):
         _write_csv(
             self.sources_path,

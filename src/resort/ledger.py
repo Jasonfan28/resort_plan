@@ -117,7 +117,7 @@ def cite(claim_id, ledger):
         )
     label = _author_label(source["authors"])
     year = source["year"].strip()
-    return f"({label} {year})"
+    return f"({label} {year})" if year else f"({label})"
 
 
 def references(ledger):
