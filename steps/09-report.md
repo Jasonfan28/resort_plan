@@ -38,13 +38,17 @@ To be filled by `/step 09`.
 
 ## Open issues
 
-- Every claim currently in research/claims.csv is status=needs-review.
-  tools/check_citations.py --report will fail this notebook until claims
-  it cites reach human-verified with a source that has passed
-  verification, so this step cannot be built to completion until steps
-  02-07 have moved at least their load-bearing claims through
-  source-verifier and the user's own human-verified sign-off.
-- This step depends on step 08's synthesis output existing first.
+- Of 50 claims in research/claims.csv, 43 are now agent-checked and 7
+  remain needs-review, but 0 are human-verified. Per CLAUDE.md rule 4,
+  only the user can set human_verified/human-verified, and per
+  tools/check_citations.py --report, nothing can be cited in this
+  report until it reaches that status. This step is intentionally not
+  built: doing so would either produce a report that fails its own
+  citation gate, or tempt filling in a status that is not mine to set.
+  It is unblocked only by the user's own review, not by more research.
+- Step 08's synthesis output now exists (data/processed/08_scenario_table.csv),
+  so that dependency is satisfied; human-verified sign-off is the only
+  remaining blocker.
 
 ## Status
 
@@ -53,3 +57,7 @@ draft
 ## Changelog
 
 - 2026-09-10: created.
+- 2026-09-10: reassessed once steps 01-08 were built. Left in draft:
+  43/50 claims are agent-checked, 0 are human-verified, and this step's
+  own citation gate requires human-verified before anything can be
+  written.
