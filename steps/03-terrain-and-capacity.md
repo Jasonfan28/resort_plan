@@ -105,15 +105,26 @@ class?
   EPSG:3979 grid, then reprojecting the clipped array to EPSG:26911 for
   area/distance work, checking that reprojected pixel size is ~1x1 m
   afterward.
-- (to be resolved during build, not yet a source or a judgment call)
-  **Ability-class slope thresholds**: check the master plan first. C032
-  gives only area percentages (7/45.5/47.5%), not slope-degree criteria,
-  so the master plan likely does not state thresholds directly. If no
-  source states them, this becomes a labelled judgment call, sensitivity-
-  tested across at least two published threshold sets (e.g. a
-  commonly-cited ski-industry banding vs. a steeper/gentler alternative),
-  reporting how much the resulting terrain split shifts between them --
-  not a single silently-chosen threshold.
+- (judgment call, resolved) **Ability-class slope thresholds**:
+  research-scout confirmed no source states numeric downhill-ski
+  thresholds (checked both master plan PDFs directly -- no "gradient"
+  or "degree" hits; checked NSAA, OSM's own piste:difficulty wiki, and
+  ski-planning references). C066-C070 record what was actually found:
+  NSAA says ratings are resort-relative with no number at all (C066);
+  OSM's piste:difficulty wiki has a numeric scale only for a different
+  tag value, ski_touring, via the Swiss Alpine Club scale (C067);
+  Colorado's Ski Safety Act legally defines "extreme terrain" at 50 deg
+  average pitch, a narrow, US-specific category (C068); a weak consumer
+  source repeats an uncredited folk banding (C069); the master plan
+  itself states one zone's average grade (South Bowl, 35-55%) but not a
+  general table (C070). Sensitivity-test both real candidate bands
+  found: C067's SAC scale (Novice <30 deg / Easy 30-35 / Intermediate
+  35-40 / Advanced 40-45 / Expert >45, steeper, meant for ski touring
+  not groomed terrain) against C069's folk banding (green <25% / blue
+  25-40% / black >40%, i.e. roughly <14 deg / 14-22 deg / >22 deg,
+  gentler, weakly sourced). Report both splits side by side, label each
+  with its real provenance, and do not present either as "the" correct
+  threshold.
 - (evidence) **Lift crosswalk**: drape OSM's 7 lift lines (C052) on the
   DEM for bottom elevation, top elevation, and vertical rise per lift
   (the exact method already proven in Phase 1's access test, C051).
