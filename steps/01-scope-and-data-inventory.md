@@ -38,6 +38,23 @@ needs-review or better as of the last /run.
   judgment about which sources are good enough. That judgment belongs to
   source-verifier and the user, not to this step.
 
+### Project CRS for spatial analysis (added for steps 03/04/07/10)
+
+- (judgment call) **EPSG:26911 (NAD83 / UTM zone 11N)** is this
+  project's one projected CRS for all spatial analysis. Reason: it is
+  what the City of Revelstoke's own ArcGIS FeatureServers already use
+  (confirmed directly on Zoning, PMBC Parcel Fabric, OCP Resort Lands
+  DPA, Buildings, and every other City layer checked so far), it is in
+  metres, and a single UTM zone has low distortion for an area this
+  small (the whole AOI is a few km across). The alternatives were
+  HRDEM's native EPSG:3979 (Canada Atlas Lambert, accurate nationally
+  but not the City's own working CRS) and BC's common EPSG:3005 (BC
+  Albers, similarly a province-wide compromise). Every other CRS
+  (HRDEM's 3979, OSM's 4326, and whatever ParcelMap BC/S030 turns out to
+  use) gets explicitly reprojected to 26911 before any distance, area,
+  or slope calculation, with a check that the result reports in metres
+  afterward.
+
 ## Outputs
 
 - data/processed/01_dataset_inventory.csv
