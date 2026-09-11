@@ -1,0 +1,207 @@
+{
+  "evidence": {
+    "n_sources": 37,
+    "n_claims": 50,
+    "claims_by_status": {
+      "agent-checked": 43,
+      "needs-review": 7
+    }
+  },
+  "scenario_table": [
+    {
+      "phase": "Phase 1 (Existing)",
+      "ccc_skiers": "4545",
+      "employees_low": "371",
+      "employees_mid": "530",
+      "employees_high": "689",
+      "needing_housing_low_min_beds": "0",
+      "needing_housing_low_max_beds": "0",
+      "needing_housing_mid_min_beds": "0",
+      "needing_housing_mid_max_beds": "80",
+      "needing_housing_high_min_beds": "89",
+      "needing_housing_high_max_beds": "239",
+      "ccc_skiers_reproduced_check": "4545",
+      "snow_adjusted_ccc": "",
+      "land_capacity_units": ""
+    },
+    {
+      "phase": "Phase 2",
+      "ccc_skiers": "9529",
+      "employees_low": "778",
+      "employees_mid": "1112",
+      "employees_high": "1445",
+      "needing_housing_low_min_beds": "178",
+      "needing_housing_low_max_beds": "328",
+      "needing_housing_mid_min_beds": "512",
+      "needing_housing_mid_max_beds": "662",
+      "needing_housing_high_min_beds": "845",
+      "needing_housing_high_max_beds": "995",
+      "ccc_skiers_reproduced_check": "9529",
+      "snow_adjusted_ccc": "",
+      "land_capacity_units": ""
+    },
+    {
+      "phase": "Phase 3",
+      "ccc_skiers": "11572",
+      "employees_low": "945",
+      "employees_mid": "1350",
+      "employees_high": "1755",
+      "needing_housing_low_min_beds": "345",
+      "needing_housing_low_max_beds": "495",
+      "needing_housing_mid_min_beds": "750",
+      "needing_housing_mid_max_beds": "900",
+      "needing_housing_high_min_beds": "1155",
+      "needing_housing_high_max_beds": "1305",
+      "ccc_skiers_reproduced_check": "11572",
+      "snow_adjusted_ccc": "",
+      "land_capacity_units": ""
+    },
+    {
+      "phase": "Buildout",
+      "ccc_skiers": "18167",
+      "employees_low": "1484",
+      "employees_mid": "2119",
+      "employees_high": "2755",
+      "needing_housing_low_min_beds": "884",
+      "needing_housing_low_max_beds": "1034",
+      "needing_housing_mid_min_beds": "1519",
+      "needing_housing_mid_max_beds": "1669",
+      "needing_housing_high_min_beds": "2155",
+      "needing_housing_high_max_beds": "2305",
+      "ccc_skiers_reproduced_check": "18167",
+      "snow_adjusted_ccc": "",
+      "land_capacity_units": ""
+    }
+  ],
+  "elevation_bands": [
+    {
+      "band": "Base to lift top",
+      "bottom_m": "512",
+      "top_m": "2225",
+      "band_vertical_m": "1713"
+    },
+    {
+      "band": "Lift top to sub peak",
+      "bottom_m": "2225",
+      "top_m": "2340",
+      "band_vertical_m": "115"
+    },
+    {
+      "band": "Sub peak to summit",
+      "bottom_m": "2340",
+      "top_m": "2466",
+      "band_vertical_m": "126"
+    }
+  ],
+  "historical_snowfall": {
+    "rmr_annual_m_low": 9,
+    "rmr_annual_m_high": 14,
+    "selkirk_mountains_annual_m_low": 12,
+    "selkirk_mountains_annual_m_high": 18
+  },
+  "zoning_top10": [
+    {
+      "zoning_code": "R-LD1",
+      "zoning_name": "Ground-Oriented Dwelling Zone",
+      "parcel_count": "2891",
+      "multi_unit_eligible_by_name": "False"
+    },
+    {
+      "zoning_code": "E-1",
+      "zoning_name": "Environmental and Rural Recreation Zone",
+      "parcel_count": "301",
+      "multi_unit_eligible_by_name": "False"
+    },
+    {
+      "zoning_code": "MU-1",
+      "zoning_name": "Downtown Zone",
+      "parcel_count": "257",
+      "multi_unit_eligible_by_name": "True"
+    },
+    {
+      "zoning_code": "P-1",
+      "zoning_name": "Parks and Public Use Zone",
+      "parcel_count": "213",
+      "multi_unit_eligible_by_name": "False"
+    },
+    {
+      "zoning_code": "R-LD5",
+      "zoning_name": "Manufactured Home and Ground-Oriented Dwelling Zone",
+      "parcel_count": "102",
+      "multi_unit_eligible_by_name": "False"
+    },
+    {
+      "zoning_code": "MU-2",
+      "zoning_name": "Downtown Fringe Zone",
+      "parcel_count": "96",
+      "multi_unit_eligible_by_name": "True"
+    },
+    {
+      "zoning_code": "R-LD6",
+      "zoning_name": "Tourist Accommodation Zone",
+      "parcel_count": "94",
+      "multi_unit_eligible_by_name": "False"
+    },
+    {
+      "zoning_code": "CD-02",
+      "zoning_name": "Comprehensive Development Zone 2",
+      "parcel_count": "93",
+      "multi_unit_eligible_by_name": "False"
+    },
+    {
+      "zoning_code": "P-2",
+      "zoning_name": "Institutional Zone",
+      "parcel_count": "89",
+      "multi_unit_eligible_by_name": "False"
+    },
+    {
+      "zoning_code": "R-LD2",
+      "zoning_name": "Small Lot Ground-Oriented Dwelling Zone",
+      "parcel_count": "85",
+      "multi_unit_eligible_by_name": "False"
+    }
+  ],
+  "resort_lands_dpa": {
+    "area_sq_m": 8110956.33984375,
+    "area_hectares": 811.095633984375
+  },
+  "housing_need_by_component": [
+    {
+      "component": "A: Extreme core housing need",
+      "years_5": "19",
+      "years_20": "75"
+    },
+    {
+      "component": "B: Homelessness",
+      "years_5": "13",
+      "years_20": "26"
+    },
+    {
+      "component": "C: Suppressed household formation",
+      "years_5": "86",
+      "years_20": "345"
+    },
+    {
+      "component": "D: Household growth",
+      "years_5": "504",
+      "years_20": "1155"
+    },
+    {
+      "component": "E: Vacancy rate adjustment",
+      "years_5": "4",
+      "years_20": "14"
+    },
+    {
+      "component": "F: Demand buffer",
+      "years_5": "188",
+      "years_20": "752"
+    }
+  ],
+  "rental_vacancy": {
+    "vacancy_rate_2021_pct": 1.4,
+    "healthy_vacancy_low_pct": 3,
+    "healthy_vacancy_high_pct": 5,
+    "renter_households_2021": 845,
+    "units_needed_for_3pct_vacancy": 14
+  }
+}
