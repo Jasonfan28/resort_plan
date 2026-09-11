@@ -1,0 +1,40 @@
+zoning_code,zoning_name,parcel_count,multi_unit_eligible_by_name
+P-3,Public Utilities Zone,63,False
+MU-1,Downtown Zone,257,True
+R-LD5,Manufactured Home and Ground-Oriented Dwelling Zone,102,False
+R-MD2,Multi-Unit Apartment Zone,6,True
+CD-02,Comprehensive Development Zone 2,93,False
+I-1,Low Impact Zone,63,False
+CD-09,Comprehensive Development Zone 9,1,False
+R-LD4,Manufactured Home Zone,26,False
+R-LD3,Multi-Unit Rowhouse Zone,7,True
+I-2,Medium Impact Zone,12,False
+CD-01,Comprehensive Development Zone 1,2,False
+I-4,Airport Zone,1,False
+MU-2,Downtown Fringe Zone,96,True
+C-2,Urban Tourist Accommodation Zone,22,False
+R-LD6,Tourist Accommodation Zone,94,False
+CD-05,Comprehensive Development Zone 5,2,False
+P-2,Institutional Zone,89,False
+CD-06,Comprehensive Development Zone 6,6,False
+I-5,Rural Recreation and Natural Resource Zone,26,False
+C-1,Highway Commercial Zone,30,False
+R-LD7,Rural Residential Zone,40,False
+C-4,Local Neighbourhood Commercial Zone,7,False
+CD-10,Comprehensive Development Zone 10,27,False
+R-LD2,Small Lot Ground-Oriented Dwelling Zone,85,False
+CD-03,Comprehensive Development Zone 3,9,False
+CD-12,Comprehensive Development Zone 12,4,False
+CD-11,Comprehensive Development Zone 11,11,False
+C-3,Rural Tourist Accommodation Zone,3,False
+CD-04,Comprehensive Development Zone 4,1,False
+R-LD1,Ground-Oriented Dwelling Zone,2891,False
+E-1,Environmental and Rural Recreation Zone,301,False
+R-MD3,Multi-Unit Condominium Zone,47,True
+CD-07,Comprehensive Development Zone 7,1,False
+I-3,High Impact Zone,56,False
+P-1,Parks and Public Use Zone,213,False
+MU-3,Corridor Zone,53,True
+R-MD1,Multi-Unit Rowhouse Zone,10,True
+CD-08,Comprehensive Development Zone 8,5,False
+MU-4,Live-Work Zone,51,True
