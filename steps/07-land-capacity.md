@@ -203,6 +203,13 @@ hold, including City priority sites and resort base lands?
 
 ## Open issues
 
+- **Needed for step 10, not made here:** this notebook only exports a
+  per-parcel table for parcels that survive the *entire* filter chain
+  (data/processed/07_network_distances.csv, 150 PIDs). Step 10's web
+  map wanted a stage-reached attribute for every candidate parcel (not
+  just full survivors), which this notebook doesn't produce; a future
+  revisit could export an intermediate per-parcel table (e.g. PID plus
+  which stage, if any, it failed at) for that purpose.
 - This step still does not answer its own central question ("how many
   units can vacant and underused parcels hold"). It answers a narrower,
   real question instead: 150 parcels (7.79 ha) pass every filter tested

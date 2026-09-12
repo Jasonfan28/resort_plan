@@ -1,0 +1,14 @@
+{
+"type": "FeatureCollection",
+"name": "10_lifts",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "osm_id": 101303245, "name": "The Ripper", "aerialway_type": "chair_lift", "proposed_map_ref": "14", "dem_vert_rise_m": 527.5, "vert_rise_delta_m": 2.5 }, "geometry": { "type": "LineString", "coordinates": [ [ -118.1119039, 50.9884195 ], [ -118.1029649, 50.9732462 ] ] } },
+{ "type": "Feature", "properties": { "osm_id": 101303264, "name": "The Stoke", "aerialway_type": "chair_lift", "proposed_map_ref": "12", "dem_vert_rise_m": 631.7, "vert_rise_delta_m": 1.3 }, "geometry": { "type": "LineString", "coordinates": [ [ -118.127741, 50.9643127 ], [ -118.102273, 50.9629453 ] ] } },
+{ "type": "Feature", "properties": { "osm_id": 101303267, "name": "Little Bit", "aerialway_type": "magic_carpet", "proposed_map_ref": "24", "dem_vert_rise_m": 9.9, "vert_rise_delta_m": 0.9 }, "geometry": { "type": "LineString", "coordinates": [ [ -118.1499636, 50.954821 ], [ -118.1497788, 50.9557216 ] ] } },
+{ "type": "Feature", "properties": { "osm_id": 481720772, "name": "Revelation Gondola - Upper", "aerialway_type": "gondola", "proposed_map_ref": "5", "dem_vert_rise_m": 899.7, "vert_rise_delta_m": 0.3 }, "geometry": { "type": "LineString", "coordinates": [ [ -118.1499259, 50.956026 ], [ -118.1267184, 50.9696688 ] ] } },
+{ "type": "Feature", "properties": { "osm_id": 876357454, "name": "Stellar", "aerialway_type": "chair_lift", "proposed_map_ref": "11", "dem_vert_rise_m": 123.5, "vert_rise_delta_m": 1.5 }, "geometry": { "type": "LineString", "coordinates": [ [ -118.1275361, 50.9729121 ], [ -118.1217962, 50.9719257 ] ] } },
+{ "type": "Feature", "properties": { "osm_id": 1221046154, "name": null, "aerialway_type": "magic_carpet", "proposed_map_ref": "Lil' Bit", "dem_vert_rise_m": 16.1, "vert_rise_delta_m": 0.6 }, "geometry": { "type": "LineString", "coordinates": [ [ -118.1268988, 50.9704691 ], [ -118.1249462, 50.96969880000001 ] ] } },
+{ "type": "Feature", "properties": { "osm_id": 1361895818, "name": "Revelation Gondola - Lower", "aerialway_type": "gondola", "proposed_map_ref": "2", "dem_vert_rise_m": 280.4, "vert_rise_delta_m": 0.4 }, "geometry": { "type": "LineString", "coordinates": [ [ -118.163184500000014, 50.9583206 ], [ -118.1499259, 50.956026 ] ] } }
+]
+}

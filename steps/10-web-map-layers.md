@@ -46,69 +46,132 @@ claims back each layer is documented in those steps.
 
 ## Method
 
-- (evidence/technical) Simplify each vector layer's geometry (e.g. a
-  shapely/geopandas simplify tolerance in metres, chosen and reported,
-  not left implicit) and export as plain GeoJSON in EPSG:4326 (the CRS
-  web maps expect), reprojecting explicitly from the project CRS
-  (EPSG:26911) and checking the result's coordinate ranges look like
-  longitude/latitude afterward.
-- (evidence/technical) Render one static hillshade image from the
-  AOI-clipped, downsampled HRDEM (not the full 1 m resolution, which
-  would be unnecessarily large for a small web image) rather than a
-  tile pyramid, given the AOI's small size. NRCan's own STAC item
-  already publishes a pre-rendered hillshade-dtm asset alongside the dtm
-  asset; clipping that to the AOI instead of computing hillshade from
-  scratch is worth trying first during build, since it needs no new
-  computation, only a windowed read of an existing asset.
-- (judgment call) Funnel parcels are published as a simplified
-  ParcelMap BC (S030) polygon layer with the funnel's pass/fail and
-  stage-reached as attributes, not the City's own parcel geometry, even
-  though the funnel's analysis itself (step 07) uses City data for
-  zoning/constraints. This keeps the analysis and the publishable
-  geometry on two different, deliberately chosen sources.
+- (evidence/technical) Simplify each vector layer's geometry (5 m
+  tolerance, applied in the project CRS EPSG:26911 before reprojecting,
+  so the tolerance means the same real-world distance for every layer)
+  and export as plain GeoJSON in EPSG:4326. AOI and runs geometry come
+  straight from step 03's own outputs (03_aoi.gpkg, 03_runs.gpkg, both
+  OSM/DEM-derived); lifts are rebuilt from OSM's raw lift geometry
+  (S050's saved Overpass result) joined to step 03's lift crosswalk,
+  since the crosswalk CSV alone has no geometry column. Every vector
+  layer uses an explicit column allowlist before export (not just a
+  blocklist check afterward -- see Checks), so a future new column on
+  an upstream file can't silently leak into a published layer.
+- (evidence/technical) Elevation bands are not in any step 04 output
+  (04_elevation_bands.csv is an area table, not polygons), so this step
+  rebuilds them: re-clip the HRDEM over the AOI, coarsen 10x (native 1 m
+  pixels would make an unusably large polygon count for a web layer),
+  classify by the same band edges, vectorize, dissolve, then clip to
+  the AOI's actual polygon shape (not just its bounding box, which
+  clip_dem reads from and which extends well beyond the resort
+  boundary), simplify, and export.
+- (evidence/technical) The hillshade image uses NRCan's own pre-rendered
+  hillshade-dtm STAC asset (a windowed read via the same clip_dem
+  helper, just a different URL) rather than computing hillshade from
+  scratch, clipped to the AOI and downsampled for a web-sized PNG.
+- (judgment call, scoped down from the original proposal) Funnel
+  parcels are published as a simplified ParcelMap BC (S030) polygon
+  layer, not the City's own parcel geometry. Step 07, as built, only
+  exported a per-parcel table for parcels that survived its *entire*
+  filter chain (150 PIDs, data/processed/07_network_distances.csv) --
+  not a stage-reached breakdown for every candidate parcel. This
+  layer's attributes are therefore `passed_full_funnel=True` (a
+  constant, since only full survivors are in scope) plus the two
+  network-distance columns, not the richer per-stage attribute this
+  step originally proposed. Getting stage-reached data would need a
+  change to step 07's notebook, which this step did not make (only the
+  step being worked on gets changed); noted under step 07's Open issues
+  instead.
+- (deviation, noted not left implicit) This notebook writes only to
+  docs/data/, not data/processed/10_*, unlike other notebooks in this
+  project. That is the explicit point of a publish-to-GitHub-Pages step
+  and was already implied by this step's own approved Outputs list
+  above; called out here so it reads as a conscious choice, not an
+  oversight against the general notebook rule.
 
 ## Outputs
 
-- docs/data/10_aoi.geojson
-- docs/data/10_lifts.geojson (with DEM-derived vertical rise as a
-  property)
-- docs/data/10_runs.geojson (with difficulty and DEM slope class)
-- docs/data/10_elevation_bands.geojson
-- docs/data/10_funnel_parcels.geojson (ParcelMap BC geometry, funnel
-  pass/fail and stage-reached as attributes)
-- docs/data/10_hillshade.png (or .webp)
+- docs/data/10_aoi.geojson (2,576 bytes)
+- docs/data/10_lifts.geojson (2,362 bytes, 7 lifts, with DEM-derived
+  vertical rise and the proposed master-plan map_ref as properties)
+- docs/data/10_runs.geojson (79,877 bytes, 116 runs, with difficulty and
+  DEM slope stats)
+- docs/data/10_elevation_bands.geojson (12,620 bytes, 3 band polygons)
+- docs/data/10_funnel_parcels.geojson (77,786 bytes, 144 of 150
+  funnel-surviving parcels -- 6 have no PID in ParcelMap BC and could
+  not be geometry-matched; `passed_full_funnel=True` plus network
+  distances as properties, not a per-stage breakdown -- see Method)
+- docs/data/10_hillshade.png (979,494 bytes)
+
+All well under the 25 MB limit; nothing was excluded.
 
 ## Checks
 
-- Every file's size reported explicitly in the notebook output, not
-  just asserted small; anything over 25 MB stays out of docs/ and out of
-  git (gitignored), with a note explaining what was excluded and why.
-- No City-of-Revelstoke-sourced geometry appears in any docs/ file (a
-  grep-style check for field names/attribution unique to the City
-  services, run against every exported file).
+- Every file's size reported explicitly in the notebook output (above)
+  and asserted under 25 MB.
+- No City-of-Revelstoke-sourced geometry or attribute appears in any
+  docs/ file: checked two ways, not just one -- an explicit column
+  allowlist at export time for every vector layer (Method), plus a
+  blocklist scan afterward for field names unique to the City's own
+  FeatureServers, as defense in depth.
 - Each GeoJSON's coordinates fall in plausible longitude/latitude ranges
-  for the Revelstoke area after reprojection (a sanity check that the
-  CRS conversion actually happened and produced the right units).
+  for the Revelstoke area after reprojection.
+- Elevation-band area cross-check: the rebuilt band polygons' total
+  area is compared against the AOI's own area (an independent number
+  from step 03/04, not derived from this step's own polygons). Last
+  run: 1,248.1 ha (rebuilt) vs. 1,248.3 ha (AOI) -- within 0.02%. This
+  check caught a real bug during build (see Changelog) and is kept as a
+  permanent guard, not removed once it passed.
+- Last run: all checks passed.
 
 ## Open issues
 
-- This step depends entirely on steps 03, 04, and 07's proposed
-  (not yet built) outputs; it cannot be built before them, and per the
-  build order in this work, is built last.
-- The exact geometry-simplification tolerance is not yet chosen; it
-  will be picked during build and reported, not left as an unstated
-  default.
+- The funnel-parcels layer only carries a constant `passed_full_funnel`
+  attribute, not the stage-reached breakdown this step originally
+  proposed, because step 07 (as built) only exports a per-parcel table
+  for full survivors. Recorded under step 07's own Open issues as a
+  possible future addition to that notebook, not fixed here.
+- 6 of the 150 funnel-surviving parcels have no PID in ParcelMap BC and
+  are absent from this layer entirely (not just unlabelled); consistent
+  with the same PID-nullability characteristic step 07 already noted.
 - Whether a single hillshade image is visually adequate at the zoom
-  levels the landing page actually uses is not yet checked; if not, a
-  small set of pre-rendered zoom levels (still plain images, not a tile
-  server) is the fallback, not a vector tile pipeline.
+  levels the landing page actually uses has not been checked against a
+  real deployed page; the fallback (a small set of pre-rendered zoom
+  levels) remains unused unless that turns out to be needed.
+- This notebook writes only to docs/data/, not data/processed/10_*, a
+  deliberate deviation from CLAUDE.md's general notebook-output rule
+  (see Method) since publishing to docs/ is this step's entire purpose.
 
 ## Status
 
-draft (proposed; not yet built, depends on steps 03/04/07)
+built
 
 ## Changelog
 
 - 2026-09-10: created as part of the spatial-analysis proposal (Phase 1).
   Awaiting approval before any notebook changes; also depends on steps
   03, 04, and 07 being built first.
+- 2026-09-12: built notebooks/10_web_map_layers.ipynb. Packaged real AOI,
+  lift, and run geometry from steps 03; rebuilt elevation-band polygons
+  from the HRDEM (not exported by step 04); published only step 07's
+  150 full-funnel-survivor parcels against live ParcelMap BC geometry
+  (144 matched; City geometry never used); clipped NRCan's own
+  pre-rendered hillshade asset to the AOI. notebook-reviewer (fresh
+  subagent) found one severe bug: `dem_coarse.rio.transform()` silently
+  returned the pre-coarsen (1 m) transform after `xarray.coarsen()`,
+  because coarsen() doesn't update the cached GeoTransform and
+  `.rio.transform()` defaults to not recalculating it -- this shrank
+  and mislocated every elevation-band polygon (~30x too small) while
+  still passing every existing Check (file size, field blocklist,
+  coordinate range), since none of them tested the polygons' actual
+  area or position. Fixed with `.rio.transform(recalc=True)`; fixing it
+  then surfaced a second, related bug (band polygons were clipped to
+  the AOI's bounding box, not its actual polygon, spilling past the
+  resort boundary) which I fixed by intersecting with the AOI polygon
+  directly, and added a permanent area cross-check against step 03/04's
+  own AOI area (1,248.1 vs. 1,248.3 ha) so a regression like this can't
+  silently pass again. Also applied explicit column allowlists to the
+  AOI/runs layers (the funnel-parcels layer already had one) as defense
+  in depth alongside the blocklist check, and corrected this step's own
+  Method/Outputs wording, which had overclaimed a stage-reached
+  attribute step 07 doesn't actually produce.
