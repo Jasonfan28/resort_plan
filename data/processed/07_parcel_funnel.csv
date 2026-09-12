@@ -1,0 +1,9 @@
+stage,parcel_count,area_ha
+0. all City of Revelstoke parcels (ParcelMap BC),5987,4804.39
+1. zoned multi-unit eligible,802,147.06
+2. outside floodplain,769,139.37
+3. outside hazardous DPA,700,104.91
+4. outside ALR,700,104.91
+5. within 100 m of water + sanitary mains,697,103.71
+6. building coverage under 20%,96,5.95
+7. mean DEM slope under 20%,96,5.95

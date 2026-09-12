@@ -1,0 +1,11 @@
+filter,value,parcel_count,area_ha
+service_distance_m,50.0,693,103.62
+service_distance_m,100.0,697,103.71
+service_distance_m,200.0,698,104.11
+building_coverage_cutoff,0.1,73,3.09
+building_coverage_cutoff,0.2,96,5.95
+building_coverage_cutoff,0.3,122,8.23
+slope_cutoff_pct,15.0,96,5.95
+slope_cutoff_pct,20.0,96,5.95
+slope_cutoff_pct,25.0,96,5.95
+slope_cutoff_pct,30.0,96,5.95
