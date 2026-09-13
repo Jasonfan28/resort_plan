@@ -73,7 +73,7 @@ claims back each layer is documented in those steps.
   parcels are published as a simplified ParcelMap BC (S030) polygon
   layer, not the City's own parcel geometry. Step 07, as built, only
   exported a per-parcel table for parcels that survived its *entire*
-  filter chain (150 PIDs, data/processed/07_network_distances.csv) --
+  filter chain (190 PIDs, data/processed/07_network_distances.csv) --
   not a stage-reached breakdown for every candidate parcel. This
   layer's attributes are therefore `passed_full_funnel=True` (a
   constant, since only full survivors are in scope) plus the two
@@ -97,8 +97,8 @@ claims back each layer is documented in those steps.
 - docs/data/10_runs.geojson (79,877 bytes, 116 runs, with difficulty and
   DEM slope stats)
 - docs/data/10_elevation_bands.geojson (12,620 bytes, 3 band polygons)
-- docs/data/10_funnel_parcels.geojson (77,786 bytes, 144 of 150
-  funnel-surviving parcels -- 6 have no PID in ParcelMap BC and could
+- docs/data/10_funnel_parcels.geojson (99,080 bytes, 183 of 190
+  funnel-surviving parcels -- 7 have no PID in ParcelMap BC and could
   not be geometry-matched; `passed_full_funnel=True` plus network
   distances as properties, not a per-stage breakdown -- see Method)
 - docs/data/10_hillshade.png (979,494 bytes)
@@ -131,7 +131,7 @@ All well under the 25 MB limit; nothing was excluded.
   proposed, because step 07 (as built) only exports a per-parcel table
   for full survivors. Recorded under step 07's own Open issues as a
   possible future addition to that notebook, not fixed here.
-- 6 of the 150 funnel-surviving parcels have no PID in ParcelMap BC and
+- 7 of the 190 funnel-surviving parcels have no PID in ParcelMap BC and
   are absent from this layer entirely (not just unlabelled); consistent
   with the same PID-nullability characteristic step 07 already noted.
 - Whether a single hillshade image is visually adequate at the zoom
@@ -175,3 +175,16 @@ built
   in depth alongside the blocklist check, and corrected this step's own
   Method/Outputs wording, which had overclaimed a stage-reached
   attribute step 07 doesn't actually produce.
+- 2026-09-12 (Phase 3 review): a fresh, independent notebook-reviewer
+  pass independently re-derived the elevation-band area from the
+  exported GeoJSON itself (bypassing this notebook's own code entirely)
+  and confirmed 1,248.1 ha, matching the AOI's own 1,248.3 ha -- the
+  fix above holds up under a genuinely from-scratch check, not just
+  this notebook's own assertion. It found two minor issues, both fixed:
+  a hand-typed "150 PIDs" in markdown (now left to the code cell's own
+  print), and a description of 04_elevation_bands.csv as "an area table"
+  when it actually only holds vertical-extent columns. Separately,
+  step 07's building-duplicate bug fix (150 -> 190 final survivors)
+  changed this layer's numbers on rerun: 183 of 190 parcels matched
+  (was 144 of 150), file size 99,080 bytes (was 77,786) -- all Outputs/
+  Open issues above updated to the corrected figures.
