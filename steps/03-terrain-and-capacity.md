@@ -143,7 +143,7 @@ DEM-derived slope class.
 - data/processed/03_runs.gpkg (116 runs: length, vertical drop, mean/max
   DEM slope, OSM difficulty tag)
 - data/processed/03_terrain_slope_aspect_summary.csv (AOI area by slope
-  class, for both threshold sets)
+  class x 4-way aspect, for both threshold sets)
 
 ## Checks
 
@@ -173,6 +173,12 @@ DEM-derived slope class.
   gentler folk banding puts only 22.9% under its gentlest class. This
   gap is itself the finding: no defensible single number exists without
   a real source for downhill-specific thresholds.
+- Aspect (computed alongside slope but originally left unused --
+  caught by a Phase-3 review) is cross-tabulated with slope class, not
+  just computed and discarded. Last run: south-facing terrain clearly
+  dominates the gentlest SAC class (40.1 of 74.4 percentage points), a
+  real finding about this AOI's orientation, not just a completeness
+  formality.
 - CRS check after every reprojection: confirmed EPSG:26911 and ~1x1 m
   pixels after reprojecting the DEM from its native EPSG:3979.
 - Every run must have a real (non-NaN) slope/drop statistic. A first
@@ -237,3 +243,21 @@ built
 - 2026-09-10: verified real DEM (S048/C051) and OSM lift/run/AOI access
   (S050/C052/C053/C063) in a Phase 1 access test; proposed a spatial
   terrain method above, awaiting approval before any notebook changes.
+- 2026-09-12 (Phase 3 review): a fresh, independent notebook-reviewer
+  pass found four real issues in the committed notebook: (1) a second
+  cell tagged "parameters" that silently defeated `--scenario`/`-p`
+  pipeline overrides for the whole spatial section (same class of bug
+  already fixed once in steps 04/07/10 by then, reintroduced here
+  because 03 was built first) -- fixed by merging into the one real
+  parameters cell; (2) `name_similarity_threshold` was defined but never
+  wired into the actual name-comparison code, which hardcoded 0.5
+  instead -- fixed; (3) aspect was computed but never used anywhere,
+  and 03_terrain_slope_aspect_summary.csv contained no aspect data
+  despite its own filename -- fixed by cross-tabulating slope class
+  with 4-way aspect, which surfaced a real finding (south-facing terrain
+  dominates the gentlest class); (4) the notebook's own intro markdown
+  still said it "does not attempt" the spatial analysis, contradicted by
+  the 30+ cells directly below it that do -- fixed. Also exposed
+  `run_sample_points` (previously a hardcoded n=20 inside a function
+  default) as a labelled parameter, though it was not further
+  sensitivity-tested this session.
