@@ -3,9 +3,9 @@ service_distance_m,50.0,693,103.62
 service_distance_m,100.0,697,103.71
 service_distance_m,200.0,698,104.11
 building_coverage_cutoff,0.1,105,3.98
-building_coverage_cutoff,0.2,150,7.79
-building_coverage_cutoff,0.3,207,11.19
-slope_cutoff_pct,15.0,149,7.77
-slope_cutoff_pct,20.0,150,7.79
-slope_cutoff_pct,25.0,150,7.79
-slope_cutoff_pct,30.0,150,7.79
+building_coverage_cutoff,0.2,190,32.6
+building_coverage_cutoff,0.3,247,36.0
+slope_cutoff_pct,15.0,189,32.58
+slope_cutoff_pct,20.0,190,32.6
+slope_cutoff_pct,25.0,190,32.6
+slope_cutoff_pct,30.0,190,32.6

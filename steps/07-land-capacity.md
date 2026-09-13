@@ -44,8 +44,9 @@ hold, including City priority sites and resort base lands?
   the geometry the user has directed be used for the public website
   (docs/), since the City's own layers carry no stated licence.
 - [C071] (new, needs-review) ParcelMap BC's MUNICIPALITY attribute
-  returns 5,989 parcels for 'Revelstoke, City of'; 2 are ~90 km south
-  near Nakusp and excluded from the funnel's working set.
+  returns 5,989 parcels for 'Revelstoke, City of'; 2 are ~115 km south
+  of Revelstoke (~31 km from Nakusp) and excluded from the funnel's
+  working set.
 - [C072] (new, needs-review) The Revelation Gondola's lower terminus
   (OSM way 1361895818) has its base station at 50.9583206N/118.1631845W,
   identified by matching step 03's DEM-sampled bottom elevation (513.5m).
@@ -85,7 +86,7 @@ hold, including City priority sites and resort base lands?
 - (evidence) **Base geometry**: ParcelMap BC (S030/C065) parcels filtered
   by ParcelMap BC's own MUNICIPALITY attribute (not a separately-sourced
   boundary polygon), reprojected to EPSG:26911. 5,989 parcels returned;
-  2 (C071, Crown Agency "Subdivision" parcels ~90 km south near Nakusp)
+  2 (C071, Crown Agency "Subdivision" parcels ~115 km south of Revelstoke)
   sit far outside the zoned area and are excluded from the working set
   as not part of the built-up area a housing funnel is meant to cover.
   City layers (Zoning, Floodplain, Hazardous DPA, ALR, Buildings, mains,
@@ -158,18 +159,18 @@ hold, including City priority sites and resort base lands?
   3. outside hazardous DPA: 700 / 104.91 ha
   4. outside ALR: 700 / 104.91 ha
   5. within 100 m of water + sanitary mains: 697 / 103.71 ha
-  6. building coverage under 20%: 150 / 7.79 ha
-  7. mean DEM slope under 20%: 150 / 7.79 ha
+  6. building coverage under 20%: 190 / 32.6 ha
+  7. mean DEM slope under 20%: 190 / 32.6 ha
 - data/processed/07_funnel_sensitivity.csv (all tested values for the 3
   judgment-call filters). Last run: service distance 50/100/200 m gives
   693/697/698 parcels (103.62/103.71/104.11 ha) -- barely sensitive at
   all, since most zoning-eligible parcels near the constraint-passing
   area are already close to mains; building coverage 10/20/30% gives
-  105/150/207 parcels (3.98/7.79/11.19 ha) -- the filter that actually
+  105/190/247 parcels (3.98/32.6/36.0 ha) -- the filter that actually
   drives the funnel's final size; slope 15/20/25/30% gives
-  149/150/150/150 parcels (7.77/7.79/7.79/7.79 ha) -- barely binding at
+  189/190/190/190 parcels (32.58/32.6/32.6/32.6 ha) -- barely binding at
   all in this range, a real finding, not a flat result left unchecked.
-- data/processed/07_network_distances.csv (150 rows, one per Filter-7
+- data/processed/07_network_distances.csv (190 rows, one per Filter-7
   survivor). Distances include both ends' own snap-to-network gap, not
   just the on-network path (see Checks).
 - Unit capacity: explicitly absent from every output file, with a note
@@ -199,20 +200,25 @@ hold, including City priority sites and resort base lands?
   ~1x1 m pixels; the gondola-endpoint reprojection (EPSG:4326 to
   EPSG:26911) checked for plausible UTM-11N-range coordinates, not just
   that the transform ran without error.
+- Building coverage cannot exceed ~100% of parcel area (a real
+  geometric invariant for an intersection-area/parcel-area ratio,
+  allowing a few percent for ordinary floating-point/boundary-snapping
+  slop). This check caught a real bug (see Changelog) and is kept as a
+  permanent guard.
 - Last run: all checks passed.
 
 ## Open issues
 
 - **Needed for step 10, not made here:** this notebook only exports a
   per-parcel table for parcels that survive the *entire* filter chain
-  (data/processed/07_network_distances.csv, 150 PIDs). Step 10's web
+  (data/processed/07_network_distances.csv, 190 PIDs). Step 10's web
   map wanted a stage-reached attribute for every candidate parcel (not
   just full survivors), which this notebook doesn't produce; a future
   revisit could export an intermediate per-parcel table (e.g. PID plus
   which stage, if any, it failed at) for that purpose.
 - This step still does not answer its own central question ("how many
   units can vacant and underused parcels hold"). It answers a narrower,
-  real question instead: 150 parcels (7.79 ha) pass every filter tested
+  real question instead: 190 parcels (32.6 ha) pass every filter tested
   (zoning eligibility, floodplain/hazard/ALR exclusion, service
   distance, building coverage, slope), but no unit count is attached to
   them. Turning that into a unit-capacity number needs two things not
@@ -232,8 +238,8 @@ hold, including City priority sites and resort base lands?
   the City's own road-network dataset, separate from any question about
   this step's methodology.
 - The building-coverage filter is the one actually doing most of the
-  funnel's work (802 to 150 parcels); the slope filter barely binds at
-  all in the tested range (149-150 parcels across 15-30%), which may
+  funnel's work (697 to 190 parcels); the slope filter barely binds at
+  all in the tested range (189-190 parcels across 15-30%), which may
   mean the multi-unit-eligible, constraint-clear, serviced parcel stock
   in Revelstoke is simply not on steep ground, rather than that slope is
   an uninformative filter choice in general.
@@ -292,3 +298,23 @@ built
   substantive correction, not a cosmetic one), and a missing CRS check
   on a second reprojection. Unit capacity remains explicitly absent, as
   scoped.
+- 2026-09-12 (Phase 3 review): a fresh, independent notebook-reviewer
+  pass found the City's own Buildings FeatureServer contains large
+  numbers of exact-duplicate polygon records (one footprint repeated 86
+  times under different OBJECTIDs) -- verified directly (17,095 fetched
+  records collapse to 3,627 distinct geometries in the working extent).
+  Filter 6 summed overlap area per parcel without deduplicating first,
+  so duplicated buildings were counted multiple times, pushing some
+  parcels' reported coverage past 2,000%. Fixed by deduplicating
+  buildings by exact geometry before the overlay, and added a permanent
+  Checks assertion that coverage cannot exceed ~100% (with a small
+  tolerance for real floating-point/boundary-snapping slop, confirmed
+  by inspecting the one remaining edge case: a 50 sqm sliver parcel
+  where two independently-digitized datasets' boundaries don't align to
+  sub-centimetre precision). This changed the final funnel from 150
+  parcels (7.79 ha) to **190 parcels (32.6 ha)** -- a substantial,
+  not cosmetic, correction; all Outputs/Checks/Open issues above are
+  updated to the corrected figures. A separate Phase-3 source-verifier
+  pass also corrected two claims this step depends on: C071's distance
+  to the outlier parcels (was "~90 km ... near Nakusp", corrected to
+  ~115 km from Revelstoke / ~31 km from Nakusp).
