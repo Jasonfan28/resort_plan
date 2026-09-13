@@ -45,6 +45,14 @@ reliability indicator can be validated against historical snowfall?
   confirmed working (no full download needed). Also found the base
   per-model archive itself contains a raw prsn (snowfall) variable,
   which appears to conflict with C035. **Conflicts with [C035].**
+- [C075] (new, needs-review) **The actual product this step's notebook
+  reads.** C064 verifies the simulations_30yAvg (per-GCM) path; the
+  notebook itself reads a different, sibling path --
+  .../sntot/YS/{ssp}/ensemble_percentiles/... -- a multi-model
+  ensemble-percentile product (sntot_p10/p50/p90). Both paths are real
+  and reachable, but citing only C064 for a different product it never
+  tested was a real citation gap, caught by a Phase-3 review; C075
+  covers the path actually used.
 
 ## Inputs
 
@@ -222,3 +230,10 @@ built
   1.0). Did not resolve the C035/C064 variable conflict; recorded as
   still open rather than silently picked. No lapse-rate adjustment
   attempted, per this step's scope.
+- 2026-09-12 (Phase 3 review): a fresh, independent notebook-reviewer
+  pass confirmed every number in this notebook's output still matches
+  what's stated above, and confirmed the C035/C064 conflict is still
+  correctly recorded as unresolved. It found one real citation gap: the
+  notebook's climate fetch actually reads the ensemble_percentiles
+  path, not the simulations_30yAvg path C064 verifies -- added C075 to
+  cover the path actually used (see Evidence). No numbers changed.
