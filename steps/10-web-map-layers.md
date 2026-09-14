@@ -101,7 +101,8 @@ claims back each layer is documented in those steps.
   funnel-surviving parcels -- 7 have no PID in ParcelMap BC and could
   not be geometry-matched; `passed_full_funnel=True` plus network
   distances as properties, not a per-stage breakdown -- see Method)
-- docs/data/10_hillshade.png (979,494 bytes)
+- docs/data/10_hillshade.png (985,374 bytes, RGBA with real alpha
+  transparency outside the AOI's rotated extent -- see Changelog)
 
 All well under the 25 MB limit; nothing was excluded.
 
@@ -188,3 +189,19 @@ built
   changed this layer's numbers on rerun: 183 of 190 parcels matched
   (was 144 of 150), file size 99,080 bytes (was 77,786) -- all Outputs/
   Open issues above updated to the corrected figures.
+- 2026-09-14: integrated these layers into docs/index.html as an
+  interactive Leaflet map (AOI, lifts, runs by difficulty, elevation
+  bands, funnel parcels, hillshade, each toggleable), alongside four
+  CC-licensed Wikimedia Commons photos of Revelstoke/RMR with proper
+  attribution. Found and fixed a real rendering bug while doing this:
+  the hillshade PNG's corners (outside the AOI's rotated extent in
+  EPSG:26911, since the clip is a rectangle in the project CRS but sits
+  at a diagonal once reprojected to a plain image) were opaque black
+  from `plt.imsave(nan_to_num(..., nan=0))`, rendering as an ugly solid
+  box on the web map. Fixed by saving a real alpha channel, transparent
+  exactly where the source array is NaN, and blending the layer with
+  `mix-blend-mode: multiply` in CSS so it shades the base map like real
+  terrain relief instead of sitting on top as flat grey. Verified
+  directly on the regenerated PNG (`img.getpixel((0,0))` reads
+  `(0,0,0,0)`, not opaque black) and visually via a headless-browser
+  screenshot, not just code review.

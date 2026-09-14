@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Revelstoke Resort Capacity and Workforce Housing</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <style>
   :root {
     --bg: #ffffff;
@@ -15,6 +17,7 @@
     --accent-alt: #b3532b;
     --warn-bg: #fdf3e7;
     --warn-border: #e8c98f;
+    --hero-overlay: linear-gradient(180deg, rgba(10,20,25,0.35) 0%, rgba(10,20,25,0.55) 60%, rgba(10,20,25,0.85) 100%);
   }
   @media (prefers-color-scheme: dark) {
     :root {
@@ -37,13 +40,34 @@
     font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     line-height: 1.5;
   }
-  main { max-width: 920px; margin: 0 auto; padding: 2rem 1.25rem 5rem; }
-  header.page-header { max-width: 920px; margin: 0 auto; padding: 2.5rem 1.25rem 1rem; }
-  h1 { font-size: 1.6rem; margin: 0 0 0.4rem; }
+  main { max-width: 960px; margin: 0 auto; padding: 0 1.25rem 5rem; }
+  h1 { font-size: 1.9rem; margin: 0 0 0.5rem; }
   .subtitle { color: var(--text-muted); margin: 0; max-width: 60ch; }
-  section { margin-top: 3rem; }
-  h2 { font-size: 1.15rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+  section { margin-top: 3.5rem; }
+  h2 { font-size: 1.2rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
   h3 { font-size: 0.95rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; margin: 2rem 0 0.75rem; }
+
+  /* Hero */
+  .hero {
+    position: relative;
+    height: min(62vh, 520px);
+    min-height: 320px;
+    margin-bottom: 0;
+    background-size: cover;
+    background-position: center 62%;
+    background-image: var(--hero-overlay), url('images/hero-valley.jpg');
+    display: flex;
+    align-items: flex-end;
+  }
+  .hero-inner { max-width: 960px; margin: 0 auto; padding: 0 1.25rem 2.25rem; width: 100%; }
+  .hero h1 { color: #fff; font-size: clamp(1.7rem, 4vw, 2.6rem); margin: 0 0 0.6rem; text-shadow: 0 2px 12px rgba(0,0,0,0.35); }
+  .hero .subtitle { color: rgba(255,255,255,0.92); max-width: 62ch; text-shadow: 0 1px 6px rgba(0,0,0,0.35); }
+  .hero .credit {
+    position: absolute; right: 0.75rem; bottom: 0.5rem;
+    font-size: 0.68rem; color: rgba(255,255,255,0.75);
+  }
+  .hero .credit a { color: rgba(255,255,255,0.9); }
+
   .stat-row { display: flex; flex-wrap: wrap; gap: 1rem; margin: 1rem 0 2rem; }
   .stat-tile {
     flex: 1 1 140px;
@@ -83,6 +107,32 @@
     padding: 0.5rem 0.8rem;
   }
   .chain .arrow { color: var(--text-muted); }
+
+  /* Alternating photo/text feature rows */
+  .feature {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    align-items: center;
+    margin: 1.75rem 0;
+  }
+  @media (min-width: 700px) {
+    .feature { grid-template-columns: 1fr 1fr; }
+    .feature.reverse .feature-media { order: 2; }
+  }
+  .feature-media { position: relative; }
+  .feature-media img {
+    width: 100%; height: 220px; object-fit: cover;
+    border-radius: 12px; border: 1px solid var(--border); display: block;
+  }
+  .feature-media .credit {
+    position: absolute; right: 0.5rem; bottom: 0.5rem;
+    font-size: 0.65rem; color: rgba(255,255,255,0.85);
+    background: rgba(0,0,0,0.4); padding: 0.1rem 0.4rem; border-radius: 4px;
+  }
+  .feature-media .credit a { color: #fff; }
+  .feature-text p { margin: 0; }
+
   .method-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5rem; }
   .method-list li {
     border: 1px solid var(--border);
@@ -100,25 +150,46 @@
   #ccc-chart .bar-label { font-size: 11px; fill: var(--text-muted); }
   #ccc-chart .bar { fill: var(--accent); }
   #ccc-chart .axis { stroke: var(--border); }
+
+  /* Map */
+  #map {
+    width: 100%; height: 520px; border-radius: 12px; border: 1px solid var(--border);
+    background: var(--bg-alt);
+  }
+  .map-legend {
+    display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; margin: 0.75rem 0 0.25rem;
+    font-size: 0.78rem; color: var(--text-muted);
+  }
+  .map-legend .swatch { display: inline-block; width: 0.7rem; height: 0.7rem; border-radius: 2px; margin-right: 0.3rem; vertical-align: -1px; }
+  .leaflet-popup-content { font-size: 0.82rem; }
+  .leaflet-popup-content b { display: block; margin-bottom: 0.15rem; }
+  .hillshade-overlay { mix-blend-mode: multiply; }
+  @media (prefers-color-scheme: dark) { .hillshade-overlay { mix-blend-mode: normal; } }
+
   footer {
-    max-width: 920px; margin: 0 auto; padding: 1rem 1.25rem 3rem;
+    max-width: 960px; margin: 0 auto; padding: 1rem 1.25rem 3rem;
     color: var(--text-muted); font-size: 0.8rem;
   }
+  footer .credits { margin-top: 0.75rem; font-size: 0.72rem; }
+  footer .credits a { color: var(--text-muted); }
   code { background: var(--bg-alt); padding: 0.1rem 0.35rem; border-radius: 4px; font-size: 0.85em; }
 </style>
 </head>
 <body>
 
-<header class="page-header">
-  <h1>Revelstoke Resort Capacity and Workforce Housing</h1>
-  <p class="subtitle">
-    One chain: terrain and lifts set skier capacity, snow reliability
-    adjusts capacity, capacity sets workforce size, workforce sets
-    housing demand, land capacity shows where housing could go. Every
-    number below is read from the analysis's own data files, not typed
-    by hand.
-  </p>
-</header>
+<div class="hero">
+  <div class="hero-inner">
+    <h1>Revelstoke Resort Capacity and Workforce Housing</h1>
+    <p class="subtitle">
+      One chain: terrain and lifts set skier capacity, snow reliability
+      adjusts capacity, capacity sets workforce size, workforce sets
+      housing demand, land capacity shows where housing could go. Every
+      number below is read from the analysis's own data files, not typed
+      by hand.
+    </p>
+  </div>
+  <div class="credit">Columbia Valley from a Revelstoke ski run &middot; <a href="https://commons.wikimedia.org/wiki/File:View-of-Columbia-Valley-and-Revelstoke.jpg" target="_blank" rel="noopener">Mascdman</a>, CC BY-SA 2.5</div>
+</div>
 
 <main>
 
@@ -134,6 +205,31 @@
     <svg id="ccc-chart" viewBox="0 0 640 220" preserveAspectRatio="xMinYMin meet"></svg>
   </section>
 
+  <section id="spatial-map">
+    <h2>The terrain and the parcels, mapped</h2>
+    <p>
+      Everything on this map is a real, computed layer from the analysis
+      notebooks, not an illustration: the resort boundary, all 7 lifts
+      and 116 runs with their DEM-derived slope, the elevation bands used
+      for the snow-reliability work, and the parcels that survive the
+      full land-capacity suitability funnel. The underlying claims for
+      these layers are agent-checked, not yet human-verified &mdash; see
+      the evidence note below the map.
+    </p>
+    <div id="map"></div>
+    <div class="map-legend" id="map-legend"></div>
+    <p class="note">
+      Terrain, lift, and run layers come from step 03; elevation bands
+      from step 04; the 190 parcels shown are the ones that pass every
+      filter in step 07's suitability funnel (zoning, floodplain/hazard/
+      ALR exclusion, service distance, building coverage, and slope) out
+      of 5,987 parcels in the City of Revelstoke &mdash; not a claim that
+      housing could be built on all of them, just that none of the
+      tested constraints rule them out. Parcel geometry is ParcelMap BC,
+      never the City's own data, per this project's publishing rule.
+    </p>
+  </section>
+
   <section id="explainer">
     <h2>The chain, in plain language</h2>
     <div class="chain">
@@ -144,45 +240,76 @@
       <div class="link">Housing demand</div><div class="arrow">&rarr;</div>
       <div class="link">Land capacity</div>
     </div>
-    <p>
-      A ski resort's master plan states a target number of skiers it is
-      designed to serve at once: its comfortable carrying capacity, or
-      CCC. That figure comes from adding up what every lift on the
-      mountain can move in a day, adjusted for how much vertical terrain
-      guests of different ability levels are expected to ski. Revelstoke
-      Mountain Resort's own 2019 master plan appendix states this
-      calculation in full, lift by lift, and this project reproduces it
-      from those same numbers rather than taking the resort's total on
-      faith.
-    </p>
-    <p>
-      Snow reliability should adjust that capacity, since a resort that
-      cannot count on enough snow cannot actually run at its designed
-      capacity every season. This project built the elevation bands and
-      recorded the resort's own historical snowfall figures, but stopped
-      short of pulling real climate-model data to project how that
-      reliability might change, because that data was not yet
-      accessible this session. That gap is shown in the table below, not
-      hidden.
-    </p>
-    <p>
-      More skiers means more staff. This project found exactly one
-      public source giving both a resort's approved capacity and its
-      peak employee count together (a comparator resort, not Revelstoke
-      itself), and used that single ratio, with an explicit
-      sensitivity range, to estimate Revelstoke's own workforce at each
-      phase of its master plan. Subtracting the resort's own planned
-      staff housing from that estimate gives a range of how many workers
-      would need housing somewhere else.
-    </p>
+
+    <div class="feature">
+      <div class="feature-media">
+        <img src="images/gondola-summit.jpg" alt="Skiers preparing to board the Revelation Gondola at Revelstoke Mountain Resort" loading="lazy">
+        <div class="credit">Revelation Gondola &middot; <a href="https://commons.wikimedia.org/wiki/File:A_day%27s_skiing_at_spedtacular_Mt_Revelstoke_-_Noth_Americas_biggest_vertical_drop_at_1713m_(5620_ft)_-_at_the_top_of_the_main_Gondola_-_(28829878381).jpg" target="_blank" rel="noopener">Murray Foubister</a>, CC BY-SA 2.0</div>
+      </div>
+      <div class="feature-text">
+        <p>
+          A ski resort's master plan states a target number of skiers it is
+          designed to serve at once: its comfortable carrying capacity, or
+          CCC. That figure comes from adding up what every lift on the
+          mountain can move in a day, adjusted for how much vertical terrain
+          guests of different ability levels are expected to ski. Revelstoke
+          Mountain Resort's own 2019 master plan appendix states this
+          calculation in full, lift by lift, and this project reproduces it
+          from those same numbers rather than taking the resort's total on
+          faith.
+        </p>
+      </div>
+    </div>
+
+    <div class="feature reverse">
+      <div class="feature-media">
+        <img src="images/terrain-offpiste.jpg" alt="A skier descending off-piste terrain at Revelstoke Mountain Resort" loading="lazy">
+        <div class="credit">Off-piste terrain &middot; <a href="https://commons.wikimedia.org/wiki/File:Revelstoke_Mountain_off_piste.jpg" target="_blank" rel="noopener">Kevin Bernier</a>, CC BY 2.0</div>
+      </div>
+      <div class="feature-text">
+        <p>
+          Snow reliability should adjust that capacity, since a resort that
+          cannot count on enough snow cannot actually run at its designed
+          capacity every season. This project built the elevation bands and
+          pulled real multi-model climate projections, but the historical
+          baseline and the projected snowfall don't reconcile under any
+          tested density assumption &mdash; a real, reported discrepancy,
+          not a smoothed-over number. That gap is shown in the table above,
+          not hidden.
+        </p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-media">
+        <img src="images/downtown-grizzly-plaza.jpg" alt="Grizzly Plaza in downtown Revelstoke, British Columbia" loading="lazy">
+        <div class="credit">Grizzly Plaza, downtown Revelstoke &middot; <a href="https://commons.wikimedia.org/wiki/File:Grizzly_Plaza_Revelstoke_British_Columbia.jpg" target="_blank" rel="noopener">Alan Silvester</a>, CC BY-SA 2.0 CA</div>
+      </div>
+      <div class="feature-text">
+        <p>
+          More skiers means more staff. This project found exactly one
+          public source giving both a resort's approved capacity and its
+          peak employee count together (a comparator resort, not Revelstoke
+          itself), and used that single ratio, with an explicit
+          sensitivity range, to estimate Revelstoke's own workforce at each
+          phase of its master plan. Subtracting the resort's own planned
+          staff housing from that estimate gives a range of how many workers
+          would need housing somewhere else &mdash; housing that would need
+          to be found in the townsite shown here, or on the resort's own
+          base lands.
+        </p>
+      </div>
+    </div>
+
     <p>
       Whether the City has room for that housing is a land-capacity
       question. This project found live, queryable zoning and parcel
-      data for the City of Revelstoke and can show which zones even
-      allow multi-unit housing, but it could not yet convert that into
-      an actual unit count, because the zoning bylaw's density rules and
-      a way to identify which specific parcels are vacant or underused
-      were not found this session.
+      data for the City of Revelstoke and ran a full suitability funnel
+      against it &mdash; zoning, floodplain, hazard and agricultural
+      exclusion, service distance, building coverage, and slope &mdash;
+      down to 190 candidate parcels, mapped above. It could not yet
+      convert that into an actual unit count, because the zoning bylaw's
+      density rules were not found this session.
     </p>
   </section>
 
@@ -196,11 +323,12 @@
     <p>Every step's full notebook, code and all, reproduces the numbers above:</p>
     <ul class="method-list" id="method-list"></ul>
     <p class="note">
-      This project's rule is that nothing gets cited in the report until
-      a person, not just an automated check, has verified it. That
-      sign-off has happened for the claims the report above cites; a
-      handful of claims elsewhere in the notebooks are still
-      needs-review and are not cited in the report.
+      This project's rule is that nothing gets cited in the written report
+      until a person, not just an automated check, has verified it. That
+      sign-off has happened for the claims the report cites; the spatial
+      layers on the map above (steps 03, 04, 07, 10) rest on claims that
+      are agent-checked or still needs-review, shown here as real computed
+      output, not yet promoted into the cited report.
     </p>
   </section>
 
@@ -210,8 +338,18 @@
   Built from <code>data/processed/</code> by
   <code>tools/build_docs_data.py</code>. Source and every claim's
   citation trail: see the project repository.
+  <div class="credits">
+    Photos, all via Wikimedia Commons (CC BY-SA / CC BY, see each caption
+    above for the exact license and a link to the original file page):
+    Columbia Valley view by Mascdman, Grizzly Plaza by Alan Silvester,
+    Revelation Gondola by Murray Foubister, off-piste terrain by Kevin Bernier.
+    Map tiles &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors.
+    Terrain, hillshade, and parcel data: NRCan HRDEM and ParcelMap BC (see report for full citations).
+  </div>
 </footer>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
 async function main() {
   const res = await fetch('data/summary.json');
@@ -220,6 +358,10 @@ async function main() {
   renderScenarioTable(data);
   renderChart(data);
   renderMethods();
+  initMap().catch(err => {
+    document.getElementById('map').outerHTML =
+      '<p class="note">Could not load map layers: ' + err + '</p>';
+  });
 }
 
 function renderStats(data) {
@@ -316,6 +458,7 @@ function renderMethods() {
     ['06', 'Housing supply and affordability'],
     ['07', 'Land capacity'],
     ['08', 'Synthesis'],
+    ['10', 'Web map layers'],
   ];
   const list = document.getElementById('method-list');
   list.innerHTML = steps.map(([num, title]) => `
@@ -325,6 +468,112 @@ function renderMethods() {
       </a>
     </li>
   `).join('');
+}
+
+const RUN_COLORS = {
+  easy: '#3fa34d', intermediate: '#2a6fdb', advanced: '#2b2b2b',
+  expert: '#7a1f1f', freeride: '#c76a1e',
+};
+const BAND_COLORS = {
+  'Base to lift top': '#9fd0c0', 'Lift top to sub peak': '#e8b06a', 'Sub peak to summit': '#dbe86a',
+};
+
+async function initMap() {
+  const [aoi, lifts, runs, bands, parcels] = await Promise.all(
+    ['10_aoi', '10_lifts', '10_runs', '10_elevation_bands', '10_funnel_parcels']
+      .map(name => fetch(`data/${name}.geojson`).then(r => r.json()))
+  );
+
+  const map = L.map('map', { scrollWheelZoom: false });
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors',
+    maxZoom: 18,
+  }).addTo(map);
+
+  const hillshade = L.imageOverlay('data/10_hillshade.png',
+    [[50.946054, -118.169667], [50.991530, -118.085702]],
+    { opacity: 0.75, className: 'hillshade-overlay' }
+  );
+
+  const bandsLayer = L.geoJSON(bands, {
+    style: f => ({ color: BAND_COLORS[f.properties.band] || '#999', weight: 0, fillOpacity: 0.35 }),
+    onEachFeature: (f, layer) => layer.bindPopup(`<b>${f.properties.band}</b><br>elevation band`),
+  });
+
+  const aoiLayer = L.geoJSON(aoi, {
+    style: { color: '#1c1f26', weight: 2, fill: false },
+  });
+
+  const runsLayer = L.geoJSON(runs, {
+    style: f => ({ color: RUN_COLORS[f.properties.osm_difficulty] || '#888', weight: 2, opacity: 0.85 }),
+    onEachFeature: (f, layer) => {
+      const p = f.properties;
+      layer.bindPopup(
+        `<b>${p.name || 'Unnamed run'}</b><br>` +
+        `${p.osm_difficulty || 'unknown'} &middot; ${Math.round(p.length_m)} m long &middot; ` +
+        `${p.mean_slope_deg}&deg; mean slope`
+      );
+    },
+  });
+
+  const liftsLayer = L.geoJSON(lifts, {
+    style: { color: '#0b5ea8', weight: 4, opacity: 0.9 },
+    onEachFeature: (f, layer) => {
+      const p = f.properties;
+      layer.bindPopup(
+        `<b>${p.name || p.osm_id}</b><br>` +
+        `${p.aerialway_type} &middot; ${p.dem_vert_rise_m} m vertical rise ` +
+        `(map_ref ${p.proposed_map_ref})`
+      );
+    },
+  });
+
+  const parcelsLayer = L.geoJSON(parcels, {
+    style: { color: '#2f8f4e', weight: 1, fillColor: '#2f8f4e', fillOpacity: 0.45 },
+    onEachFeature: (f, layer) => {
+      const p = f.properties;
+      const gondolaKm = p.network_dist_to_gondola_base_m != null ? (p.network_dist_to_gondola_base_m / 1000).toFixed(1) : 'n/a';
+      const downtownM = p.network_dist_to_downtown_m != null ? Math.round(p.network_dist_to_downtown_m) : 'n/a';
+      layer.bindPopup(
+        `<b>PID ${p.PID}</b><br>` +
+        `${p.PARCEL_CLASS}, ${Math.round(p.FEATURE_AREA_SQM)} m&sup2; &middot; passed full suitability funnel<br>` +
+        `${downtownM} m to downtown, ${gondolaKm} km to gondola base`
+      );
+    },
+  });
+
+  hillshade.addTo(map);
+  bandsLayer.addTo(map);
+  aoiLayer.addTo(map);
+  runsLayer.addTo(map);
+  liftsLayer.addTo(map);
+  parcelsLayer.addTo(map);
+
+  // Default view centers on the resort terrain (AOI/lifts/runs), the richer visual layer;
+  // the funnel-surviving parcels are ~7 km away in downtown Revelstoke (see the note below
+  // the map) and stay reachable by panning or zooming out, not forced into the initial view.
+  const terrainGroup = L.featureGroup([aoiLayer, runsLayer, liftsLayer]);
+  map.fitBounds(terrainGroup.getBounds(), { padding: [24, 24] });
+
+  L.control.layers(null, {
+    'Hillshade (terrain)': hillshade,
+    'Elevation bands': bandsLayer,
+    'AOI boundary': aoiLayer,
+    'Runs (by difficulty)': runsLayer,
+    'Lifts': liftsLayer,
+    'Funnel-surviving parcels': parcelsLayer,
+  }, { collapsed: false }).addTo(map);
+
+  const legend = document.getElementById('map-legend');
+  const items = [
+    ['#0b5ea8', 'Lift'],
+    ['#3fa34d', 'Easy run'], ['#2a6fdb', 'Intermediate run'], ['#2b2b2b', 'Advanced run'],
+    ['#7a1f1f', 'Expert run'], ['#c76a1e', 'Freeride run'],
+    ['#2f8f4e', 'Suitability-funnel parcel'],
+  ];
+  legend.innerHTML = items.map(([color, label]) =>
+    `<span><span class="swatch" style="background:${color}"></span>${label}</span>`
+  ).join('');
 }
 
 main().catch(err => {

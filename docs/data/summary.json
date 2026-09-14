@@ -1,10 +1,11 @@
 {
   "evidence": {
-    "n_sources": 37,
-    "n_claims": 50,
+    "n_sources": 54,
+    "n_claims": 75,
     "claims_by_status": {
       "human-verified": 43,
-      "needs-review": 7
+      "needs-review": 9,
+      "agent-checked": 23
     }
   },
   "scenario_table": [
